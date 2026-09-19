@@ -7,6 +7,8 @@ const railProgress = document.querySelector("[data-rail-progress]");
 const form = document.querySelector("#project-form");
 const status = document.querySelector("#form-status");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const menuToggle = document.querySelector(".menu-toggle");
+const mobileNav = document.querySelector("#mobile-nav");
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -15,6 +17,20 @@ function clamp(value, min, max) {
 function updateHeader() {
   header?.classList.toggle("is-scrolled", window.scrollY > 24);
 }
+
+function closeMobileNav() {
+  document.body.classList.remove("menu-open");
+  menuToggle?.setAttribute("aria-expanded", "false");
+  menuToggle?.querySelector("b")?.replaceChildren(document.createTextNode("Abrir menú"));
+}
+
+menuToggle?.addEventListener("click", () => {
+  const open = document.body.classList.toggle("menu-open");
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.querySelector("b")?.replaceChildren(document.createTextNode(open ? "Cerrar menú" : "Abrir menú"));
+});
+mobileNav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMobileNav));
+window.addEventListener("keydown", (event) => { if (event.key === "Escape") closeMobileNav(); });
 
 function updateHorizontalRail() {
   if (!horizontal || !rail || prefersReducedMotion || window.innerWidth <= 860) return;
