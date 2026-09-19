@@ -37,7 +37,11 @@ window.addEventListener("keydown", (event) => { if (event.key === "Escape") clos
 portfolioFilters.forEach((filterButton) => {
   filterButton.addEventListener("click", () => {
     const filter = filterButton.dataset.filter;
-    portfolioFilters.forEach((button) => button.classList.toggle("is-active", button === filterButton));
+    portfolioFilters.forEach((button) => {
+      const active = button === filterButton;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
     portfolioEntries.forEach((entry) => {
       const visible = filter === "all" || entry.dataset.origin === filter;
       entry.hidden = !visible;
