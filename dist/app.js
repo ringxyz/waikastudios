@@ -6,8 +6,6 @@ const railCurrent = document.querySelector("[data-rail-current]");
 const railProgress = document.querySelector("[data-rail-progress]");
 const form = document.querySelector("#project-form");
 const status = document.querySelector("#form-status");
-const portfolioFilters = [...document.querySelectorAll("[data-filter]")];
-const portfolioEntries = [...document.querySelectorAll("[data-origin]")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const menuToggle = document.querySelector(".menu-toggle");
 const mobileNav = document.querySelector("#mobile-nav");
@@ -34,20 +32,161 @@ menuToggle?.addEventListener("click", () => {
 mobileNav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMobileNav));
 window.addEventListener("keydown", (event) => { if (event.key === "Escape") closeMobileNav(); });
 
-portfolioFilters.forEach((filterButton) => {
-  filterButton.addEventListener("click", () => {
-    const filter = filterButton.dataset.filter;
-    portfolioFilters.forEach((button) => {
-      const active = button === filterButton;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", String(active));
+function initCoverflow() {
+  const carousel = document.querySelector("[data-coverflow]");
+  const viewport = carousel?.querySelector("[data-coverflow-viewport]");
+  const cards = [...(carousel?.querySelectorAll("[data-coverflow-card]") || [])];
+  const current = carousel?.querySelector("[data-coverflow-current]");
+  if (!carousel || !viewport || cards.length === 0) return;
+
+  const state = { pos: 0, target: 0, width: 0, frame: null, drag: null, suppressClick: false, selected: 0 };
+  const count = cards.length;
+  const indexAt = (value) => ((Math.round(value) % count) + count) % count;
+
+  const paint = () => {
+    if (!state.width) return;
+    const pitch = state.width * .7;
+    cards.forEach((card, index) => {
+      let offset = ((index - state.pos) % count + count) % count;
+      if (offset > count / 2) offset -= count;
+      const distance = Math.abs(offset);
+      const ramp = Math.pow(distance, .66);
+      const tilt = Math.min(42 * ramp, 76) * Math.sign(offset);
+      const edge = Math.max(0, Math.min(1, 3.25 - distance));
+      card.style.transform = `translateX(calc(-50% + ${offset * pitch}px)) translateZ(${-state.width * .34 * ramp}px) rotateY(${-tilt}deg)`;
+      card.style.opacity = String(Math.max(0, 1 - distance * .16) * edge);
+      card.style.zIndex = String(100 - Math.round(distance * 10));
+      card.style.pointerEvents = distance < 2.5 ? "auto" : "none";
     });
-    portfolioEntries.forEach((entry) => {
-      const visible = filter === "all" || entry.dataset.origin === filter;
-      entry.hidden = !visible;
-    });
+
+    const selected = indexAt(state.pos);
+    if (selected !== state.selected || !cards[state.selected].classList.contains("is-active")) {
+      state.selected = selected;
+      cards.forEach((card, index) => {
+        const active = index === selected;
+        card.classList.toggle("is-active", active);
+        card.tabIndex = active ? 0 : -1;
+        card.setAttribute("aria-current", active ? "true" : "false");
+      });
+      if (current) current.textContent = String(selected + 1).padStart(2, "0");
+    }
+  };
+
+  const settle = (target) => {
+    if (state.frame !== null) cancelAnimationFrame(state.frame);
+    state.target = target;
+    if (prefersReducedMotion) {
+      state.pos = target;
+      paint();
+      return;
+    }
+    const step = () => {
+      const remaining = target - state.pos;
+      if (Math.abs(remaining) < .0005) {
+        state.pos = target;
+        state.frame = null;
+        paint();
+        return;
+      }
+      state.pos += remaining * .15;
+      paint();
+      state.frame = requestAnimationFrame(step);
+    };
+    state.frame = requestAnimationFrame(step);
+  };
+
+  const goTo = (index) => {
+    const target = index + Math.round((state.target - index) / count) * count;
+    settle(target);
+  };
+  const nudge = (amount) => settle(Math.round(state.target) + amount);
+
+  viewport.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    if (state.frame !== null) cancelAnimationFrame(state.frame);
+    state.frame = null;
+    viewport.setPointerCapture(event.pointerId);
+    state.target = state.pos;
+    state.drag = { id: event.pointerId, x: event.clientX, pos: state.pos, moved: false };
   });
-});
+  viewport.addEventListener("pointermove", (event) => {
+    if (!state.drag || state.drag.id !== event.pointerId || !state.width) return;
+    const delta = event.clientX - state.drag.x;
+    state.drag.moved ||= Math.abs(delta) > 7;
+    state.pos = state.drag.pos - delta / (state.width * .7);
+    state.target = state.pos;
+    paint();
+  });
+  const endDrag = (event) => {
+    if (!state.drag || state.drag.id !== event.pointerId) return;
+    state.suppressClick = state.drag.moved;
+    state.drag = null;
+    settle(Math.round(state.pos));
+    window.setTimeout(() => { state.suppressClick = false; }, 0);
+  };
+  viewport.addEventListener("pointerup", endDrag);
+  viewport.addEventListener("pointercancel", endDrag);
+  viewport.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") { event.preventDefault(); nudge(-1); }
+    if (event.key === "ArrowRight") { event.preventDefault(); nudge(1); }
+  });
+  cards.forEach((card, index) => card.addEventListener("click", (event) => {
+    if (state.suppressClick) { event.preventDefault(); return; }
+    if (index !== state.selected) { event.preventDefault(); goTo(index); }
+  }));
+  carousel.querySelector("[data-coverflow-prev]")?.addEventListener("click", () => nudge(-1));
+  carousel.querySelector("[data-coverflow-next]")?.addEventListener("click", () => nudge(1));
+
+  const measure = () => {
+    state.width = cards[0].offsetWidth;
+    paint();
+  };
+  measure();
+  new ResizeObserver(measure).observe(viewport);
+}
+
+function initMarquee() {
+  const tracks = [...document.querySelectorAll("[data-marquee-track]")];
+  if (tracks.length === 0 || prefersReducedMotion) return;
+  const states = tracks.map((track) => ({ track, offset: 0, width: 0, speed: Number(track.dataset.speed) || -30, direction: 1 }));
+  let previousTime = performance.now();
+  let previousScroll = window.scrollY;
+  let scrollVelocity = 0;
+
+  const measure = () => states.forEach((item) => {
+    item.width = item.track.firstElementChild?.getBoundingClientRect().width || 0;
+    if (item.speed > 0 && item.offset === 0) item.offset = -item.width;
+  });
+  measure();
+  new ResizeObserver(measure).observe(document.querySelector("[data-marquee]"));
+
+  const animate = (time) => {
+    const delta = Math.min((time - previousTime) / 1000, .05);
+    const scrollDelta = window.scrollY - previousScroll;
+    if (Math.abs(scrollDelta) > .1) {
+      scrollVelocity += ((scrollDelta / Math.max(delta, .016)) - scrollVelocity) * .18;
+      states.forEach((item) => { item.direction = scrollDelta < 0 ? -1 : 1; });
+    } else {
+      scrollVelocity *= .9;
+    }
+    previousScroll = window.scrollY;
+    previousTime = time;
+    const factor = 1 + Math.min(Math.abs(scrollVelocity) / 850, 2.5);
+
+    states.forEach((item) => {
+      if (!item.width) return;
+      item.offset += item.speed * item.direction * factor * delta;
+      while (item.offset <= -item.width) item.offset += item.width;
+      while (item.offset > 0) item.offset -= item.width;
+      item.track.style.transform = `translate3d(${item.offset}px, 0, 0)`;
+    });
+    requestAnimationFrame(animate);
+  };
+  requestAnimationFrame(animate);
+}
+
+initCoverflow();
+initMarquee();
 
 function updateHorizontalRail() {
   if (!horizontal || !rail || prefersReducedMotion || window.innerWidth <= 860) return;

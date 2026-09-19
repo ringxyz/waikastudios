@@ -48,10 +48,14 @@
     <div class="scroll-ruler" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   </section>
 
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-      <span>ESTRATEGIA</span><i>+</i><span>DISEÑO WEB</span><i>+</i><span>IA APLICADA</span><i>+</i><span>CONTENIDO</span><i>+</i>
-      <span>ESTRATEGIA</span><i>+</i><span>DISEÑO WEB</span><i>+</i><span>IA APLICADA</span><i>+</i><span>CONTENIDO</span><i>+</i>
+  <div class="ticker" aria-hidden="true" data-marquee>
+    <div class="ticker-track" data-marquee-track data-speed="-34">
+      <div class="ticker-group"><span>ESTRATEGIA</span><i>+</i><span>DISEÑO WEB</span><i>+</i><span>IA APLICADA</span><i>+</i><span>CONTENIDO</span><i>+</i></div>
+      <div class="ticker-group"><span>ESTRATEGIA</span><i>+</i><span>DISEÑO WEB</span><i>+</i><span>IA APLICADA</span><i>+</i><span>CONTENIDO</span><i>+</i></div>
+    </div>
+    <div class="ticker-track ticker-track-reverse" data-marquee-track data-speed="27">
+      <div class="ticker-group"><span>WEBS QUE CONVIERTEN</span><i>·</i><span>MOVIMIENTO CON PROPÓSITO</span><i>·</i><span>SISTEMAS QUE CRECEN</span><i>·</i></div>
+      <div class="ticker-group"><span>WEBS QUE CONVIERTEN</span><i>·</i><span>MOVIMIENTO CON PROPÓSITO</span><i>·</i><span>SISTEMAS QUE CRECEN</span><i>·</i></div>
     </div>
   </div>
 
@@ -107,75 +111,93 @@
       <h2 id="portfolio-title">Trabajo real.<br><em>Enlaces reales.</em></h2>
       <p>Proyectos desarrollados para clientes directos de Waikastudios y como colaborador web de Lymbicorp. Abre cualquier caso para verlo en funcionamiento.</p>
     </div>
-    <div class="portfolio-index" aria-labelledby="portfolio-index-title">
-      <div class="portfolio-index-head">
-        <div>
-          <h3 id="portfolio-index-title">Explora los proyectos.</h3>
-          <p>Filtra por relación de trabajo o revisa el archivo completo.</p>
-        </div>
-        <div class="portfolio-filters" role="group" aria-label="Filtrar proyectos">
-          <button type="button" class="portfolio-filter is-active" data-filter="all" aria-pressed="true">Todos <span>14</span></button>
-          <button type="button" class="portfolio-filter" data-filter="lymbicorp" aria-pressed="false">Para Lymbicorp <span>7</span></button>
-          <button type="button" class="portfolio-filter" data-filter="waika" aria-pressed="false">Clientes Waika <span>7</span></button>
-        </div>
+    <div class="portfolio-showcase" aria-labelledby="portfolio-index-title">
+      <div class="portfolio-showcase-head">
+        <h3 id="portfolio-index-title">Explora los proyectos.</h3>
+        <p>Arrastra para recorrerlos. La tarjeta central abre la web real.</p>
       </div>
-      <div class="portfolio-list">
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://brevemnt.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-brevemnt.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Brevemnt"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">01</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">Brevemnt</h4><p class="portfolio-entry-meta">Wellness hub · Panamá</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://dentologicpanama.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-dentologic.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Dentologic Panamá"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">02</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">Dentologic Panamá</h4><p class="portfolio-entry-meta">Clínica dental · Panamá</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://auraclinicpanama.com/es_es/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-aura-clinic.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Aura Clinic"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">03</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">Aura Clinic</h4><p class="portfolio-entry-meta">Cirugía estética · Panamá</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://thalassinosmindcenter.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-thalassinos.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Thalassinos Mind Center"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">04</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">Thalassinos Mind Center</h4><p class="portfolio-entry-meta">Salud y neurodesarrollo</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://drvictorrequena.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-victor-requena.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web del Dr. Víctor Requena"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">05</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">Dr. Víctor Requena</h4><p class="portfolio-entry-meta">Cirugía de mano y microcirugía</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://drmartinalpirezdiaz.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-martin-alpirez.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web del Dr. Martín Alpírez Díaz"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">06</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">Dr. Martín Alpírez Díaz</h4><p class="portfolio-entry-meta">Proyecto médico</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="lymbicorp" href="https://bsspecialists.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-bs-specialists.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Brain & Spine Specialists"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">07</span><span class="portfolio-entry-origin">Para Lymbicorp</span></div><h4 class="portfolio-entry-name">BS Specialists</h4><p class="portfolio-entry-meta">Salud avanzada · Panamá</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://elitecellularcorp.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-elite-cellular.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Elite Cellular Corp"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">08</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Elite Cellular Corp</h4><p class="portfolio-entry-meta">Tecnología y distribución</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://oscardleon.net/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-oscar-dleon.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Oscar D’León"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">09</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Oscar D’León</h4><p class="portfolio-entry-meta">Música · artista</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://annaetorrealba.net/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-annae-torrealba.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Annaé Torrealba"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">10</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Annaé Torrealba</h4><p class="portfolio-entry-meta">Música · artista</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://difusionlatinafm.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-difusion-latina.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Difusión Latina FM"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">11</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Difusión Latina FM</h4><p class="portfolio-entry-meta">Radio y contenidos</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://tuplatto.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-tuplatto.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Tu Plat.to"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">12</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Tu Plat.to</h4><p class="portfolio-entry-meta">Gastronomía</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://tuplatto.com/pilotburger/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-pilot-burger.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Pilot Burger"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">13</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Pilot Burger</h4><p class="portfolio-entry-meta">Restauración · landing</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
-        <a class="portfolio-entry" data-origin="waika" href="https://claudrivas.com/" target="_blank" rel="noopener">
-          <figure class="portfolio-entry-preview"><img src="/portfolio-claudia-rivas.png" width="1280" height="800" loading="lazy" decoding="async" alt="Vista previa de la web de Claudia Rivas"></figure>
-          <div class="portfolio-entry-body"><div class="portfolio-entry-top"><span class="portfolio-entry-no">14</span><span class="portfolio-entry-origin">Cliente Waikastudios</span></div><h4 class="portfolio-entry-name">Claudia Rivas</h4><p class="portfolio-entry-meta">Moda y portfolio</p><span class="portfolio-entry-link">Ver proyecto <span aria-hidden="true">↗</span></span></div>
-        </a>
+      <div class="coverflow" data-coverflow role="region" aria-roledescription="carrusel" aria-label="Proyectos web de Waika Studios">
+        <div class="coverflow-viewport" data-coverflow-viewport tabindex="0">
+          <div class="coverflow-stage">
+            <a class="portfolio-card" data-coverflow-card href="https://brevemnt.com/" target="_blank" rel="noopener" aria-label="Abrir Brevemnt, wellness hub en Panamá">
+              <img src="/portfolio-brevemnt.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Brevemnt">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">01</span>
+              <span class="portfolio-card-info"><strong>Brevemnt</strong><small>Wellness hub · Panamá</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://dentologicpanama.com/" target="_blank" rel="noopener" aria-label="Abrir Dentologic Panamá, clínica dental en Panamá">
+              <img src="/portfolio-dentologic.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Dentologic Panamá">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">02</span>
+              <span class="portfolio-card-info"><strong>Dentologic Panamá</strong><small>Clínica dental · Panamá</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://auraclinicpanama.com/es_es/" target="_blank" rel="noopener" aria-label="Abrir Aura Clinic, cirugía estética en Panamá">
+              <img src="/portfolio-aura-clinic.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Aura Clinic">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">03</span>
+              <span class="portfolio-card-info"><strong>Aura Clinic</strong><small>Cirugía estética · Panamá</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://thalassinosmindcenter.com/" target="_blank" rel="noopener" aria-label="Abrir Thalassinos Mind Center">
+              <img src="/portfolio-thalassinos.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Thalassinos Mind Center">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">04</span>
+              <span class="portfolio-card-info"><strong>Thalassinos Mind Center</strong><small>Salud y neurodesarrollo</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://drvictorrequena.com/" target="_blank" rel="noopener" aria-label="Abrir la web del Dr. Víctor Requena">
+              <img src="/portfolio-victor-requena.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web del Dr. Víctor Requena">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">05</span>
+              <span class="portfolio-card-info"><strong>Dr. Víctor Requena</strong><small>Cirugía de mano y microcirugía</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://drmartinalpirezdiaz.com/" target="_blank" rel="noopener" aria-label="Abrir la web del Dr. Martín Alpírez Díaz">
+              <img src="/portfolio-martin-alpirez.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web del Dr. Martín Alpírez Díaz">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">06</span>
+              <span class="portfolio-card-info"><strong>Dr. Martín Alpírez Díaz</strong><small>Proyecto médico</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://bsspecialists.com/" target="_blank" rel="noopener" aria-label="Abrir BS Specialists, salud avanzada en Panamá">
+              <img src="/portfolio-bs-specialists.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Brain & Spine Specialists">
+              <span class="portfolio-card-tag">Para Lymbicorp</span><span class="portfolio-card-no">07</span>
+              <span class="portfolio-card-info"><strong>BS Specialists</strong><small>Salud avanzada · Panamá</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://elitecellularcorp.com/" target="_blank" rel="noopener" aria-label="Abrir Elite Cellular Corp">
+              <img src="/portfolio-elite-cellular.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Elite Cellular Corp">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">08</span>
+              <span class="portfolio-card-info"><strong>Elite Cellular Corp</strong><small>Tecnología y distribución</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://oscardleon.net/" target="_blank" rel="noopener" aria-label="Abrir la web de Oscar D’León">
+              <img src="/portfolio-oscar-dleon.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Oscar D’León">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">09</span>
+              <span class="portfolio-card-info"><strong>Oscar D’León</strong><small>Música · artista</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://annaetorrealba.net/" target="_blank" rel="noopener" aria-label="Abrir la web de Annaé Torrealba">
+              <img src="/portfolio-annae-torrealba.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Annaé Torrealba">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">10</span>
+              <span class="portfolio-card-info"><strong>Annaé Torrealba</strong><small>Música · artista</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://difusionlatinafm.com/" target="_blank" rel="noopener" aria-label="Abrir Difusión Latina FM">
+              <img src="/portfolio-difusion-latina.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Difusión Latina FM">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">11</span>
+              <span class="portfolio-card-info"><strong>Difusión Latina FM</strong><small>Radio y contenidos</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://tuplatto.com/" target="_blank" rel="noopener" aria-label="Abrir Tu Plat.to">
+              <img src="/portfolio-tuplatto.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Tu Plat.to">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">12</span>
+              <span class="portfolio-card-info"><strong>Tu Plat.to</strong><small>Gastronomía</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://tuplatto.com/pilotburger/" target="_blank" rel="noopener" aria-label="Abrir Pilot Burger">
+              <img src="/portfolio-pilot-burger.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Pilot Burger">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">13</span>
+              <span class="portfolio-card-info"><strong>Pilot Burger</strong><small>Restauración · landing</small><b>Ver proyecto ↗</b></span>
+            </a>
+            <a class="portfolio-card" data-coverflow-card href="https://claudrivas.com/" target="_blank" rel="noopener" aria-label="Abrir la web de Claudia Rivas">
+              <img src="/portfolio-claudia-rivas.png" width="1280" height="800" loading="lazy" decoding="async" draggable="false" alt="Vista previa de la web de Claudia Rivas">
+              <span class="portfolio-card-tag">Cliente Waika</span><span class="portfolio-card-no">14</span>
+              <span class="portfolio-card-info"><strong>Claudia Rivas</strong><small>Moda y portfolio</small><b>Ver proyecto ↗</b></span>
+            </a>
+          </div>
+        </div>
+        <div class="coverflow-controls">
+          <p><span data-coverflow-current>01</span> / 14</p>
+          <div class="coverflow-buttons">
+            <button type="button" data-coverflow-prev aria-label="Proyecto anterior">Anterior</button>
+            <button type="button" data-coverflow-next aria-label="Proyecto siguiente">Siguiente</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
