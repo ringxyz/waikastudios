@@ -63,7 +63,7 @@ img { max-width: 100%; display: block; }
 .header-cta:hover { transform: translateY(-2px); background: var(--ink); color: var(--paper); }
 .menu-toggle { display: none; }
 .mobile-nav { display: none; }
-.header-cta { justify-self: end; min-height: 44px; display: inline-flex; align-items: center; background: var(--acid); font: 700 12px var(--mono); text-transform: uppercase; border: 1px solid var(--ink); padding: .7rem 1rem; }
+.header-cta { justify-self: end; min-height: 44px; display: inline-flex; align-items: center; background: var(--acid-deep); color: var(--paper); font: 700 12px var(--mono); text-transform: uppercase; border: 1px solid var(--acid-deep); padding: .7rem 1rem; }
 .header-quiet-link { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
 .header-quiet-link:hover { opacity: 1; }
 
@@ -100,7 +100,7 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .cta-button:hover { transform: translateY(-3px); }
 .cta-button:active { transform: translateY(0); }
 .cta-button:focus-visible, .hero-work-link:focus-visible { outline: 3px solid var(--acid); outline-offset: 4px; }
-.cta-button-primary { background: var(--acid); color: var(--ink); border-color: var(--acid); }
+.cta-button-primary { background: var(--acid-deep); color: var(--paper); border-color: var(--acid-deep); }
 .cta-button-primary:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .cta-button-dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .cta-button-dark:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
@@ -379,8 +379,8 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .project-form button {
   margin-top: .6rem;
   border: 0;
-  background: var(--acid);
-  color: var(--ink);
+  background: var(--acid-deep);
+  color: var(--paper);
   min-height: 58px;
   padding: 0 1.2rem;
   text-align: left;
@@ -388,7 +388,7 @@ h3 { letter-spacing: -.04em; line-height: .96; }
   cursor: pointer;
   transition: transform .25s ease, background .25s ease;
 }
-.project-form button:hover { transform: translateY(-2px); background: var(--paper); }
+.project-form button:hover { transform: translateY(-2px); background: var(--paper); color: var(--ink); }
 .project-form button:active { transform: translateY(0) scale(.99); }
 .project-form button span { float: right; font-size: 1.3rem; }
 .form-status { min-height: 20px; font-size: .9rem; }
@@ -431,8 +431,8 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .briefing-actions button:disabled { cursor: wait; opacity: .55; }
 .button-secondary { background: transparent; color: var(--paper); }
 .button-secondary:hover { background: rgba(255,255,255,.1); }
-.button-primary { min-width: 150px; background: var(--acid); color: var(--ink); text-align: left; }
-.button-primary:hover { background: var(--paper); }
+.button-primary { min-width: 150px; background: var(--acid-deep); color: var(--paper); text-align: left; }
+.button-primary:hover { background: var(--paper); color: var(--ink); }
 .briefing-actions button:focus-visible, .header-quiet-link:focus-visible, .choice:has(input:focus-visible) { outline: 3px solid var(--acid); outline-offset: 3px; }
 .briefing-actions button span { float: right; margin-left: 1rem; font-size: 1.25rem; }
 .briefing-save { margin: 1.4rem 0 0; color: rgba(255,255,255,.5); font: 11px var(--mono); line-height: 1.4; }
@@ -469,7 +469,7 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   .mobile-nav { position: fixed; inset: 68px 0 auto; z-index: 49; display: grid; gap: 0; transform: translateY(-130%); visibility: hidden; background: var(--paper); border-bottom: 1px solid var(--line); transition: transform .35s cubic-bezier(.2,.8,.2,1), visibility .35s; }
   .mobile-nav a { display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 1.1rem; border-top: 1px solid var(--line); font: 700 13px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
-  .mobile-nav a:last-child { background: var(--acid); }
+  .mobile-nav a:last-child { background: var(--acid-deep); color: var(--paper); }
   .menu-open .mobile-nav { transform: translateY(0); visibility: visible; }
   .scene { min-height: auto; padding: 6rem 1.1rem; }
   h1 { font-size: clamp(3.5rem, 15vw, 5.2rem); margin-top: 5rem; }
