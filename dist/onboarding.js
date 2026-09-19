@@ -6,7 +6,11 @@ const progressBar = document.querySelector("#progress-bar");
 const stepLabel = document.querySelector("#step-label");
 const progressPercent = document.querySelector("#progress-percent");
 const status = document.querySelector("#briefing-status");
+const progress = document.querySelector(".briefing-progress");
+const actions = document.querySelector(".briefing-actions");
+const saveNote = document.querySelector(".briefing-save");
 const storageKey = "waika-briefing-draft-v1";
+const deliveryEndpoint = "https://formsubmit.co/ajax/waikastudios@gmail.com";
 let currentStep = 0;
 
 function readData() {
@@ -65,22 +69,65 @@ function validateStep() {
   return true;
 }
 
-function submitBriefing() {
+function showCompletion() {
+  steps.forEach((step) => { step.classList.remove("is-active"); step.hidden = true; });
+  progress.hidden = true;
+  actions.hidden = true;
+  saveNote.hidden = true;
+  form.classList.add("is-complete");
+  status.textContent = "Briefing enviado. Ya está en camino a Waika Studios y responderemos al correo indicado.";
+  status.className = "form-status ok briefing-success";
+  status.setAttribute("tabindex", "-1");
+  status.focus();
+}
+
+async function submitBriefing() {
   const data = readData();
-  const subject = encodeURIComponent(`Nuevo briefing: ${data.project}`);
-  const body = encodeURIComponent([
-    `Nombre: ${data.name}`, `Email: ${data.email}`, `Proyecto: ${data.project}`, "",
-    "Negocio:", data.business, "", "Audiencia:", data.audience, "",
-    "Objetivo:", data.goal, "Éxito:", data.success, "",
-    "Necesidades:", (data.needs || []).join(", "), "Imprescindible:", data.mustHave, "",
-    "Secciones:", data.sections, "Materiales:", data.materials, "",
-    "Referencias:", data.referenceUrls || "No indicadas", "Notas visuales:", data.referenceNotes || "No indicadas", "",
-    "Timing:", data.timing || "No indicado"
-  ].join("\n"));
-  localStorage.removeItem(storageKey);
-  status.textContent = "Briefing preparado. Se abrirá tu correo para revisarlo y enviarlo a Waika Studios.";
-  status.className = "form-status ok";
-  window.location.href = `mailto:waikastudios@gmail.com?subject=${subject}&body=${body}`;
+  const payload = {
+    _subject: `Nuevo briefing: ${data.project}`,
+    _template: "table",
+    _honey: "",
+    name: data.name,
+    email: data.email,
+    Proyecto: data.project,
+    Negocio: data.business,
+    Audiencia: data.audience,
+    Objetivo: data.goal,
+    Resultado_esperado: data.success,
+    Necesidades: (data.needs || []).join(", "),
+    Imprescindible: data.mustHave,
+    Secciones: data.sections,
+    Materiales: data.materials,
+    Referencias: data.referenceUrls || "No indicadas",
+    Notas_visuales: data.referenceNotes || "No indicadas",
+    Timing: data.timing || "No indicado",
+    Consentimiento: data.consent ? "Sí" : "No",
+    Origen: window.location.href
+  };
+
+  nextButton.disabled = true;
+  backButton.disabled = true;
+  nextButton.textContent = "Enviando…";
+  status.textContent = `Enviando a ${form.dataset.recipient}…`;
+  status.className = "form-status";
+
+  try {
+    const response = await fetch(deliveryEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json();
+    if (!response.ok || result.success === false) throw new Error(result.message || "No se pudo entregar el briefing.");
+    localStorage.removeItem(storageKey);
+    showCompletion();
+  } catch (error) {
+    nextButton.disabled = false;
+    backButton.disabled = false;
+    nextButton.innerHTML = "Enviar briefing <span>↗</span>";
+    status.textContent = "No pudimos enviarlo. Revisa la conexión e inténtalo de nuevo; tus respuestas siguen guardadas.";
+    status.className = "form-status error";
+  }
 }
 
 nextButton.addEventListener("click", () => {

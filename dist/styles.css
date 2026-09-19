@@ -424,6 +424,7 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .consent input { width: 20px; height: 20px; flex: none; accent-color: var(--acid); }
 .briefing-actions { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; }
 .briefing-actions button { min-height: 52px; padding: .8rem 1.1rem; border: 1px solid var(--acid); cursor: pointer; font: 800 1rem var(--sans); }
+.briefing-actions button:disabled { cursor: wait; opacity: .55; }
 .button-secondary { background: transparent; color: var(--paper); }
 .button-secondary:hover { background: rgba(255,255,255,.1); }
 .button-primary { min-width: 150px; background: var(--acid); color: var(--ink); text-align: left; }
@@ -431,6 +432,8 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .briefing-actions button:focus-visible, .header-quiet-link:focus-visible, .choice:has(input:focus-visible) { outline: 3px solid var(--acid); outline-offset: 3px; }
 .briefing-actions button span { float: right; margin-left: 1rem; font-size: 1.25rem; }
 .briefing-save { margin: 1.4rem 0 0; color: rgba(255,255,255,.5); font: 11px var(--mono); line-height: 1.4; }
+.briefing-form.is-complete { min-height: 520px; display: grid; align-content: center; }
+.briefing-success { max-width: 15ch; margin: 0; color: var(--acid); font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 800; line-height: .94; letter-spacing: -.04em; }
 
 footer {
   display: grid;
