@@ -6,6 +6,8 @@ const railCurrent = document.querySelector("[data-rail-current]");
 const railProgress = document.querySelector("[data-rail-progress]");
 const form = document.querySelector("#project-form");
 const status = document.querySelector("#form-status");
+const portfolioFilters = [...document.querySelectorAll("[data-filter]")];
+const portfolioEntries = [...document.querySelectorAll("[data-origin]")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const menuToggle = document.querySelector(".menu-toggle");
 const mobileNav = document.querySelector("#mobile-nav");
@@ -31,6 +33,17 @@ menuToggle?.addEventListener("click", () => {
 });
 mobileNav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMobileNav));
 window.addEventListener("keydown", (event) => { if (event.key === "Escape") closeMobileNav(); });
+
+portfolioFilters.forEach((filterButton) => {
+  filterButton.addEventListener("click", () => {
+    const filter = filterButton.dataset.filter;
+    portfolioFilters.forEach((button) => button.classList.toggle("is-active", button === filterButton));
+    portfolioEntries.forEach((entry) => {
+      const visible = filter === "all" || entry.dataset.origin === filter;
+      entry.hidden = !visible;
+    });
+  });
+});
 
 function updateHorizontalRail() {
   if (!horizontal || !rail || prefersReducedMotion || window.innerWidth <= 860) return;
