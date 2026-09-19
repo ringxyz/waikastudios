@@ -340,12 +340,13 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .about {
   min-height: 82dvh;
   display: grid;
-  grid-template-columns: .7fr 1.15fr;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
   gap: clamp(2rem, 8vw, 8rem);
   align-items: center;
   background: var(--paper-2);
 }
-.about img { width: min(34vw, 360px); margin: auto; transform: rotate(-4deg); }
+.about-map { width: 100%; max-width: 680px; margin: 0; }
+.about-map img { width: 100%; height: auto; mix-blend-mode: multiply; }
 .about h2 { margin-bottom: 2rem; }
 
 .onboarding {
@@ -494,7 +495,7 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .steps > div { min-height: 220px; }
   .offer { min-height: auto; }
   .offer-guarantee { min-height: 280px; }
-  .about img { width: 54vw; margin: 0; }
+  .about-map { max-width: 640px; }
   footer span { justify-self: start; }
   .briefing-shell { display: block; padding: calc(8rem + env(safe-area-inset-top)) 1.1rem max(2rem, env(safe-area-inset-bottom)); }
   .briefing-intro { position: static; margin-bottom: 3rem; }
