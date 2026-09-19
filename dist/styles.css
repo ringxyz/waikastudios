@@ -21,16 +21,6 @@ body {
   font-family: var(--sans);
   overflow-x: hidden;
 }
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  opacity: .13;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
-}
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 .skip-link {
@@ -68,6 +58,8 @@ img { max-width: 100%; display: block; }
 .site-header nav a, .header-cta { transition: transform .25s ease, opacity .25s ease; }
 .site-header nav a:hover, .header-cta:hover { transform: translateY(-2px); opacity: .68; }
 .header-cta { justify-self: end; font: 700 12px var(--mono); text-transform: uppercase; border: 1px solid var(--ink); padding: .7rem .9rem; }
+.header-quiet-link { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
+.header-quiet-link:hover { opacity: 1; }
 
 .scene { position: relative; min-height: 100dvh; padding: clamp(6rem, 10vw, 9rem) clamp(1rem, 4vw, 4rem); }
 .eyebrow, .scene-count, .service span, .rail-card span, .steps span {
@@ -414,6 +406,47 @@ h3 { letter-spacing: -.06em; line-height: .92; }
 .form-status.ok { font-weight: 800; }
 .form-status.error { font-weight: 800; color: var(--acid); }
 
+/* Briefing flow */
+.onboarding-page { min-height: 100dvh; background: var(--paper-2); }
+.onboarding-header { position: relative; grid-template-columns: 1fr auto; background: var(--paper); }
+.onboarding-header .header-quiet-link { justify-self: end; }
+.briefing-shell { min-height: 100dvh; display: grid; grid-template-columns: minmax(280px, .8fr) minmax(420px, 1fr); gap: clamp(3rem, 9vw, 10rem); max-width: 1440px; margin: 0 auto; padding: 10rem clamp(1.1rem, 6vw, 6rem) 4rem; }
+.briefing-intro { align-self: start; position: sticky; top: 9rem; }
+.briefing-intro h1 { max-width: 7ch; margin: 2.5rem 0 2rem; font-size: clamp(4.5rem, 8vw, 9rem); color: var(--ink); }
+.briefing-intro > p:not(.eyebrow) { max-width: 28rem; font-size: 1.1rem; line-height: 1.5; }
+.briefing-aside { display: flex; flex-direction: column; gap: .5rem; margin-top: 5rem; padding-top: 1rem; border-top: 1px solid var(--line); font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.briefing-form { align-self: start; min-width: 0; padding: clamp(1.2rem, 3vw, 3rem); background: var(--ink); color: var(--paper); }
+.briefing-progress { margin-bottom: clamp(3rem, 7vw, 6rem); }
+.briefing-progress-top { display: flex; justify-content: space-between; gap: 1rem; color: var(--acid); font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.briefing-progress-track { height: 3px; margin-top: .8rem; background: rgba(255,255,255,.2); }
+.briefing-progress-track span { display: block; height: 100%; width: 14%; background: var(--acid); transition: width .4s ease; }
+.briefing-step { display: none; border: 0; padding: 0; min-width: 0; }
+.briefing-step.is-active { display: grid; gap: 1.25rem; animation: briefing-in .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes briefing-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.briefing-step legend { max-width: 13ch; padding: 0; color: var(--acid); font-size: clamp(2.6rem, 5vw, 5.5rem); font-weight: 800; line-height: .9; letter-spacing: -.07em; }
+.step-help { max-width: 34rem; margin: .25rem 0 1.8rem; color: rgba(255,255,255,.7); line-height: 1.5; }
+.briefing-step label:not(.choice):not(.consent) { display: grid; gap: .55rem; color: var(--acid); font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.briefing-step input:not([type="radio"]):not([type="checkbox"]), .briefing-step textarea { width: 100%; border: 1px solid rgba(255,255,255,.38); background: rgba(255,255,255,.04); color: var(--paper); padding: .95rem 1rem; font: 500 1rem var(--sans); outline: none; border-radius: 0; }
+.briefing-step textarea { resize: vertical; min-height: 7rem; }
+.briefing-step input::placeholder, .briefing-step textarea::placeholder { color: rgba(255,255,255,.52); }
+.briefing-step input:focus, .briefing-step textarea:focus { border-color: var(--acid); box-shadow: 0 0 0 3px rgba(155,210,45,.2); }
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: .3rem 0 1rem; }
+.choice { position: relative; min-height: 64px; display: flex; align-items: center; gap: .7rem; padding: .85rem 1rem; border: 1px solid rgba(255,255,255,.3); color: var(--paper); cursor: pointer; line-height: 1.25; transition: border-color .2s ease, background .2s ease, color .2s ease; }
+.choice:hover, .choice:has(input:checked) { border-color: var(--acid); background: var(--acid); color: var(--ink); }
+.choice input { width: 18px; height: 18px; accent-color: var(--ink); flex: none; }
+.choice-grid-wide { grid-template-columns: 1fr 1fr; }
+.consent { display: flex; align-items: flex-start; gap: .7rem; color: rgba(255,255,255,.72); font-size: .9rem; line-height: 1.4; cursor: pointer; }
+.consent input { width: 20px; height: 20px; flex: none; accent-color: var(--acid); }
+.briefing-actions { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; }
+.briefing-actions button { min-height: 52px; padding: .8rem 1.1rem; border: 1px solid var(--acid); cursor: pointer; font: 800 1rem var(--sans); }
+.button-secondary { background: transparent; color: var(--paper); }
+.button-secondary:hover { background: rgba(255,255,255,.1); }
+.button-primary { min-width: 150px; background: var(--acid); color: var(--ink); text-align: left; }
+.button-primary:hover { background: var(--paper); }
+.briefing-actions button:focus-visible, .header-quiet-link:focus-visible, .choice:has(input:focus-visible) { outline: 3px solid var(--acid); outline-offset: 3px; }
+.briefing-actions button span { float: right; margin-left: 1rem; font-size: 1.25rem; }
+.briefing-save { margin: 1.4rem 0 0; color: rgba(255,255,255,.5); font: 11px var(--mono); line-height: 1.4; }
+
 footer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1.2fr;
@@ -435,7 +468,7 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .site-header { grid-template-columns: 1fr auto; height: 68px; }
   .site-header nav { display: none; }
   .brand img { width: 132px; }
-  .header-cta { padding: .6rem .75rem; }
+  .header-cta { padding: .7rem .75rem; min-height: 44px; }
   .scene { min-height: auto; padding: 6rem 1.1rem; }
   h1 { font-size: clamp(4rem, 22vw, 7rem); margin-top: 5rem; }
   h2 { font-size: clamp(3rem, 15vw, 5.8rem); }
@@ -465,6 +498,12 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .offer { min-height: auto; }
   .about img { width: 54vw; margin: 0; }
   footer span { justify-self: start; }
+  .briefing-shell { display: block; padding: 8rem 1.1rem 2rem; }
+  .briefing-intro { position: static; margin-bottom: 3rem; }
+  .briefing-intro h1 { margin-top: 1.5rem; font-size: clamp(4rem, 18vw, 7rem); }
+  .briefing-aside { margin-top: 2rem; }
+  .briefing-form { padding: 1.15rem; }
+  .briefing-step legend { font-size: clamp(2.6rem, 14vw, 5.6rem); }
 }
 
 @media (max-width: 520px) {
@@ -472,6 +511,9 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .steps > div { min-height: 180px; border-right: 0; border-bottom: 1px solid var(--line); }
   .horizontal-intro h2 { font-size: clamp(3rem, 15vw, 4.6rem); }
   .rail-card { height: 320px; }
+  .choice-grid, .choice-grid-wide { grid-template-columns: 1fr; }
+  .briefing-actions { position: sticky; bottom: 0; z-index: 5; margin-left: -1.15rem; margin-right: -1.15rem; padding: .8rem 1.15rem; background: rgba(16,17,15,.95); }
+  .briefing-actions button { min-height: 56px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -480,4 +522,5 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   [data-scene], [data-stagger] { opacity: 1; transform: none; }
   .rail { transform: none !important; }
   .portfolio-row { animation-play-state: paused; }
+  .briefing-step.is-active { animation: none; }
 }
