@@ -58,11 +58,12 @@ img { max-width: 100%; display: block; }
 }
 .brand img { width: 152px; height: auto; }
 .site-header nav { display: flex; gap: 2rem; font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
-.site-header nav a, .header-cta { transition: transform .25s ease, opacity .25s ease; }
-.site-header nav a:hover, .header-cta:hover { transform: translateY(-2px); opacity: .68; }
+.site-header nav a, .header-cta { transition: transform .25s ease, opacity .25s ease, background .25s ease; }
+.site-header nav a:hover { transform: translateY(-2px); opacity: .68; }
+.header-cta:hover { transform: translateY(-2px); background: var(--ink); color: var(--paper); }
 .menu-toggle { display: none; }
 .mobile-nav { display: none; }
-.header-cta { justify-self: end; font: 700 12px var(--mono); text-transform: uppercase; border: 1px solid var(--ink); padding: .7rem .9rem; }
+.header-cta { justify-self: end; min-height: 44px; display: inline-flex; align-items: center; background: var(--acid); font: 700 12px var(--mono); text-transform: uppercase; border: 1px solid var(--ink); padding: .7rem 1rem; }
 .header-quiet-link { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
 .header-quiet-link:hover { opacity: 1; }
 
@@ -94,20 +95,16 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 }
 .hero-grid { position: relative; z-index: 2; max-width: 1180px; }
 .hero-copy { max-width: 420px; font-size: clamp(1.05rem, 1.7vw, 1.4rem); line-height: 1.35; margin-left: clamp(0rem, 34vw, 28rem); }
-.round-link {
-  position: absolute;
-  right: clamp(1rem, 5vw, 5rem);
-  bottom: clamp(2rem, 8vh, 5rem);
-  width: 72px;
-  height: 72px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  font-size: 2rem;
-  transition: transform .35s ease, background .35s ease;
-}
-.round-link:hover { transform: rotate(18deg) scale(1.04); background: var(--acid); }
+.hero-actions { display: flex; align-items: center; gap: 1.25rem; margin: 2rem 0 0 clamp(0rem, 34vw, 28rem); }
+.cta-button { min-height: 56px; display: inline-flex; align-items: center; justify-content: center; padding: .85rem 1.35rem; border: 1px solid transparent; font: 800 13px var(--mono); text-transform: uppercase; letter-spacing: .03em; transition: transform .25s ease, background .25s ease, color .25s ease; }
+.cta-button:hover { transform: translateY(-3px); }
+.cta-button:active { transform: translateY(0); }
+.cta-button:focus-visible, .hero-work-link:focus-visible { outline: 3px solid var(--acid); outline-offset: 4px; }
+.cta-button-primary { background: var(--acid); color: var(--ink); border-color: var(--acid); }
+.cta-button-primary:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.cta-button-dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.cta-button-dark:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.hero-work-link { min-height: 44px; display: inline-flex; align-items: center; border-bottom: 1px solid var(--ink); font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .kinetic-logo {
   position: absolute;
   right: -8vw;
@@ -131,18 +128,20 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 @keyframes tick { from { transform: scaleX(.25); opacity: .35; } to { transform: scaleX(1); opacity: 1; } }
 
 .ticker {
-  overflow: hidden;
+  width: 100%;
+  overflow: clip;
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   background: var(--ink);
-  transform: rotate(-.7deg) scale(1.02);
 }
 .ticker-track {
   width: max-content;
+  min-width: 200vw;
   display: flex;
+  background: var(--ink);
   will-change: transform;
 }
-.ticker-group { display: flex; flex: none; align-items: center; gap: clamp(1.2rem, 2vw, 2.5rem); padding: .75rem clamp(1.2rem, 2vw, 2.5rem) .8rem 0; color: var(--acid); font: 800 clamp(2.8rem, 6.5vw, 6.8rem) var(--sans); line-height: .82; letter-spacing: -.065em; white-space: nowrap; }
+.ticker-group { min-width: 100vw; display: flex; flex: none; align-items: center; justify-content: space-around; gap: clamp(1.2rem, 2vw, 2.5rem); padding: .75rem clamp(1.2rem, 2vw, 2.5rem) .8rem; color: var(--acid); font: 800 clamp(2.8rem, 6.5vw, 6.8rem) var(--sans); line-height: .82; letter-spacing: -.04em; white-space: nowrap; }
 .ticker-group i { color: var(--paper); font: 400 .72em var(--serif); }
 .ticker-track-reverse { border-top: 1px solid rgba(255,255,255,.24); background: var(--acid); }
 .ticker-track-reverse .ticker-group { padding-block: .65rem .75rem; color: var(--ink); font-size: clamp(1rem, 2vw, 1.65rem); font-family: var(--mono); font-weight: 500; line-height: 1; letter-spacing: -.03em; }
@@ -195,6 +194,9 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .coverflow-buttons { display: flex; gap: .5rem; }
 .coverflow-buttons button { min-height: 44px; padding: .65rem .9rem; border: 1px solid rgba(255,255,255,.38); background: transparent; color: var(--paper); cursor: pointer; font: 500 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; transition: background .2s ease, color .2s ease, border-color .2s ease; }
 .coverflow-buttons button:hover, .coverflow-buttons button:focus-visible { border-color: var(--acid); background: var(--acid); color: var(--ink); outline: none; }
+.portfolio-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2rem; margin: clamp(4rem, 7vw, 7rem) clamp(1rem, 4vw, 4rem) 0; padding: clamp(1.5rem, 4vw, 3.5rem); background: var(--acid); color: var(--ink); }
+.portfolio-cta h3 { max-width: 16ch; margin: 0; font-size: clamp(2.2rem, 4vw, 4.5rem); line-height: .92; letter-spacing: -.04em; }
+.portfolio-cta p { max-width: 54ch; margin: 1rem 0 0; line-height: 1.5; }
 
 .manifesto {
   display: grid;
@@ -318,7 +320,8 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 }
 .offer p { color: rgba(243, 239, 230, .76); }
 .offer h2 { font-size: clamp(2.8rem, 4.4vw, 4.6rem); line-height: .94; }
-.offer-copy > p:last-child { max-width: 48ch; margin: 1.5rem 0 0; line-height: 1.55; }
+.offer-copy > h2 + p { max-width: 48ch; margin: 1.5rem 0 0; line-height: 1.55; }
+.offer-cta { margin-top: 2rem; }
 .offer-guarantee { align-self: stretch; display: grid; align-content: space-between; min-height: 330px; padding: 1.5rem; background: var(--acid); color: var(--ink); }
 .offer-guarantee > span { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .offer-guarantee strong { font-size: clamp(4.25rem, 7vw, 6rem); line-height: .85; letter-spacing: -.04em; }
@@ -473,10 +476,9 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   h2 { font-size: clamp(2.8rem, 12vw, 4.8rem); }
   .hero { min-height: 100dvh; }
   .hero-copy { margin-left: 0; }
-  .round-link { position: static; margin-top: 2rem; }
+  .hero-actions { margin-left: 0; }
   .kinetic-logo { right: -34vw; top: 26vh; width: 88vw; }
   .scroll-ruler { display: none; }
-  .ticker { transform: none; }
   .manifesto, .section-head, .service, .horizontal-intro, .offer, .about, .onboarding, footer { grid-template-columns: 1fr; }
   .portfolio-heading { grid-template-columns: 1fr; padding-top: 7rem; }
   .portfolio-heading h2 { font-size: clamp(3.2rem, 11vw, 4.8rem); }
@@ -485,6 +487,8 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .portfolio-showcase-head { align-items: flex-start; flex-direction: column; }
   .coverflow { --coverflow-card: clamp(270px, 72vw, 520px); }
   .coverflow-viewport { padding-block: 2.5rem; }
+  .portfolio-cta { grid-template-columns: 1fr; align-items: start; }
+  .portfolio-cta .cta-button { justify-self: start; }
   .manifesto-card { min-height: 310px; transform: none; }
   .service { gap: 1rem; padding: 1.5rem 0; }
   .horizontal-section { height: auto; }
@@ -524,6 +528,8 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .site-header { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
   .onboarding-header .header-quiet-link { font-size: 10px; }
   .onboarding-header .brand img { width: 118px; }
+  .hero-actions { align-items: flex-start; flex-direction: column; gap: .75rem; }
+  .hero-actions .cta-button { width: 100%; }
   .portfolio-heading { padding-bottom: 3rem; }
   .coverflow { --coverflow-card: min(82vw, 390px); }
   .portfolio-card-tag, .portfolio-card-no { top: .7rem; }
