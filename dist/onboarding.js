@@ -10,9 +10,24 @@ const progress = document.querySelector(".briefing-progress");
 const actions = document.querySelector(".briefing-actions");
 const saveNote = document.querySelector(".briefing-save");
 const storageKey = "waika-briefing-draft-v1";
-const deliveryEndpoint = "https://hook.us1.make.com/413ios4ej7o7qaeef4g2wv89rtfp5met";
+const deliveryEndpoint = "/api/briefing";
+const challengeEndpoint = "/api/form-challenge";
 let currentStep = 0;
 let formChallenge = null;
+
+async function getFormChallenge() {
+  if (formChallenge && Date.now() < formChallenge.expiresAt - 60_000) return formChallenge;
+  const response = await fetch(challengeEndpoint, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+  const result = await response.json();
+  if (!response.ok || !result.token) throw new Error("No se pudo validar el formulario.");
+  formChallenge = result;
+  return result;
+}
 
 function readData() {
   const data = {};
@@ -86,8 +101,19 @@ function showCompletion(confirmationSent, recipientEmail) {
 
 async function submitBriefing() {
   const data = readData();
+  let challenge;
+  try {
+    challenge = await getFormChallenge();
+    const remainingWait = challenge.issuedAt + challenge.minWaitMs - Date.now();
+    if (remainingWait > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingWait + 100));
+  } catch {
+    status.textContent = "No pudimos validar el formulario. Recarga la página e inténtalo de nuevo.";
+    status.className = "form-status error";
+    return;
+  }
   const payload = {
     website: data.website || "",
+    formChallenge: challenge.token,
     name: data.name,
     email: data.email,
     Proyecto: data.project,
@@ -103,8 +129,7 @@ async function submitBriefing() {
     Notas_visuales: data.referenceNotes || "No indicadas",
     Timing: data.timing || "No indicado",
     Consentimiento: data.consent ? "Sí" : "No",
-    Origen: window.location.href,
-    submittedAt: new Date().toISOString()
+    Origen: window.location.href
   };
 
   nextButton.disabled = true;
@@ -119,9 +144,7 @@ async function submitBriefing() {
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(payload)
     });
-    const responseText = await response.text();
-    let result;
-    try { result = JSON.parse(responseText); } catch { result = { success: response.ok, confirmationSent: false }; }
+    const result = await response.json();
     if (!response.ok || result.success !== true) throw new Error(result.message || "No se pudo entregar el briefing.");
     localStorage.removeItem(storageKey);
     showCompletion(result.confirmationSent === true, data.email);
@@ -145,3 +168,4 @@ backButton.addEventListener("click", () => showStep(Math.max(0, currentStep - 1)
 form.addEventListener("input", saveDraft);
 restoreDraft();
 showStep(0);
+getFormChallenge().catch(() => {});
