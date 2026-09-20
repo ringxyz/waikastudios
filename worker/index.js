@@ -231,9 +231,28 @@ async function sendEmail(env, payload, idempotencyKey) {
   return { response, result };
 }
 
+async function sendBriefingToMake(env, fields, idempotencyKey) {
+  const response = await fetch(env.MAKE_ONBOARDING_WEBHOOK_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Waika-Idempotency-Key": idempotencyKey
+    },
+    body: JSON.stringify({
+      ...fields,
+      submissionId: idempotencyKey,
+      submittedAt: new Date().toISOString()
+    })
+  });
+
+  return { response, result: await response.text().catch(() => "") };
+}
+
 async function handleBriefing(request, env) {
   if (!allowedPageRequest(request)) return json({ success: false, message: "Origen no permitido." }, 403);
-  if (!env.RESEND_API_KEY) return json({ success: false, message: "El servicio de correo no está configurado." }, 503);
+  if (!env.MAKE_ONBOARDING_WEBHOOK_URL) {
+    return json({ success: false, message: "El servicio de recepción no está configurado." }, 503);
+  }
   if (!request.headers.get("Content-Type")?.toLowerCase().startsWith("application/json")) {
     return json({ success: false, message: "Tipo de contenido no permitido." }, 415);
   }
@@ -270,35 +289,32 @@ async function handleBriefing(request, env) {
 
   const from = clean(env.BRIEFING_FROM_EMAIL, 320) || "Waika Studios <onboarding@resend.dev>";
   const replyTo = clean(env.BRIEFING_REPLY_TO, 254) || "waikastudios@gmail.com";
-  const briefingDelivery = await sendEmail(env, {
-    from,
-    to: ["waikastudios@gmail.com"],
-    reply_to: fields.email,
-    subject: `Nuevo briefing: ${fields.Proyecto}`.slice(0, 180),
-    html: emailHtml(fields)
-  }, `waika-briefing-${idempotencyKey}`);
+  const briefingDelivery = await sendBriefingToMake(env, fields, idempotencyKey);
 
-  if (!briefingDelivery.response.ok || !briefingDelivery.result.id) {
-    console.error("Resend rejected briefing", briefingDelivery.response.status, briefingDelivery.result);
-    return json({ success: false, message: "El correo no pudo entregarse. Inténtalo de nuevo en unos minutos." }, 502);
+  if (!briefingDelivery.response.ok) {
+    console.error("Make rejected briefing", briefingDelivery.response.status, briefingDelivery.result);
+    return json({ success: false, message: "El briefing no pudo procesarse. Inténtalo de nuevo en unos minutos." }, 502);
   }
 
-  const confirmationDelivery = await sendEmail(env, {
-    from,
-    to: [fields.email],
-    reply_to: replyTo,
-    subject: "Hemos recibido tu briefing — Waika Studios",
-    html: confirmationEmailHtml(fields)
-  }, `waika-confirmation-${idempotencyKey}`);
-  const confirmationSent = confirmationDelivery.response.ok && Boolean(confirmationDelivery.result.id);
+  let confirmationSent = false;
+  if (env.RESEND_API_KEY) {
+    const confirmationDelivery = await sendEmail(env, {
+      from,
+      to: [fields.email],
+      reply_to: replyTo,
+      subject: "Hemos recibido tu briefing — Waika Studios",
+      html: confirmationEmailHtml(fields)
+    }, `waika-confirmation-${idempotencyKey}`);
+    confirmationSent = confirmationDelivery.response.ok && Boolean(confirmationDelivery.result.id);
 
-  if (!confirmationSent) {
-    console.error("Resend rejected briefing confirmation", confirmationDelivery.response.status, confirmationDelivery.result);
+    if (!confirmationSent) {
+      console.error("Resend rejected briefing confirmation", confirmationDelivery.response.status, confirmationDelivery.result);
+    }
   }
 
   return json({
     success: true,
-    deliveryId: briefingDelivery.result.id,
+    webhookAccepted: true,
     confirmationSent
   });
 }

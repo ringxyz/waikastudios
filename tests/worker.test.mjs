@@ -4,8 +4,13 @@ import { readFile } from "node:fs/promises";
 const source = await readFile(new URL("../worker/index.js", import.meta.url), "utf8");
 const worker = (await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`)).default;
 let emailCalls = 0;
+let webhookCalls = 0;
 const originalFetch = globalThis.fetch;
-globalThis.fetch = async () => {
+globalThis.fetch = async (url) => {
+  if (String(url).startsWith("https://hook.us1.make.com/")) {
+    webhookCalls += 1;
+    return new Response("Accepted");
+  }
   emailCalls += 1;
   return Response.json({ id: `email-${emailCalls}` });
 };
@@ -13,6 +18,7 @@ globalThis.fetch = async () => {
 const origin = "https://waikastudios.waikastudios.chatgpt.site";
 const env = {
   FORM_SIGNING_SECRET: "local-test-secret-that-is-not-used-in-production",
+  MAKE_ONBOARDING_WEBHOOK_URL: "https://hook.us1.make.com/test-webhook",
   RESEND_API_KEY: "local-test-resend-key",
   ASSETS: { fetch: async () => new Response("asset") }
 };
@@ -42,6 +48,7 @@ try {
   }), env);
   assert.equal(honeypot.status, 200);
   assert.equal(emailCalls, 0);
+  assert.equal(webhookCalls, 0);
 
   const tampered = await worker.fetch(new Request(`${origin}/api/briefing`, {
     method: "POST",
@@ -78,7 +85,8 @@ try {
   }), env);
   assert.equal(valid.status, 200);
   assert.equal((await valid.json()).success, true);
-  assert.equal(emailCalls, 2);
+  assert.equal(webhookCalls, 1);
+  assert.equal(emailCalls, 1);
 
   const asset = await worker.fetch(new Request(`${origin}/`), env);
   assert.equal(asset.headers.get("X-Frame-Options"), "DENY");
