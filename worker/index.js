@@ -1,7 +1,5 @@
 // Cloudflare Worker entrypoint for the Waika Studios site and onboarding form.
-const ALLOWED_ORIGINS = new Set([
-  "https://waikastudios.waikastudios.chatgpt.site"
-]);
+const DEFAULT_ORIGIN = "https://waikastudios.waikastudios.chatgpt.site";
 
 const MAX_BODY_BYTES = 64 * 1024;
 const CHALLENGE_MIN_AGE_MS = 2_500;
@@ -94,13 +92,14 @@ function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
 }
 
-function allowedPageRequest(request) {
+function allowedPageRequest(request, env) {
+  const allowedOrigins = new Set([DEFAULT_ORIGIN, clean(env.PUBLIC_SITE_ORIGIN, 200)].filter(Boolean));
   const origin = request.headers.get("Origin");
-  if (origin) return ALLOWED_ORIGINS.has(origin);
+  if (origin) return allowedOrigins.has(origin);
   const referer = request.headers.get("Referer");
   if (!referer) return false;
   try {
-    return ALLOWED_ORIGINS.has(new URL(referer).origin);
+    return allowedOrigins.has(new URL(referer).origin);
   } catch {
     return false;
   }
@@ -249,7 +248,7 @@ async function sendBriefingToMake(env, fields, idempotencyKey) {
 }
 
 async function handleBriefing(request, env) {
-  if (!allowedPageRequest(request)) return json({ success: false, message: "Origen no permitido." }, 403);
+  if (!allowedPageRequest(request, env)) return json({ success: false, message: "Origen no permitido." }, 403);
   if (!env.MAKE_ONBOARDING_WEBHOOK_URL) {
     return json({ success: false, message: "El servicio de recepción no está configurado." }, 503);
   }
@@ -324,7 +323,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/api/form-challenge") {
       if (request.method !== "GET") return json({ success: false, message: "Método no permitido." }, 405, { Allow: "GET" });
-      if (!allowedPageRequest(request)) return json({ success: false, message: "Origen no permitido." }, 403);
+      if (!allowedPageRequest(request, env)) return json({ success: false, message: "Origen no permitido." }, 403);
       return createChallenge(env);
     }
     if (url.pathname === "/api/briefing") {
