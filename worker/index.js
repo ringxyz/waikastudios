@@ -1,3 +1,4 @@
+// Cloudflare Worker entrypoint for the Waika Studios onboarding form.
 const ALLOWED_ORIGINS = new Set([
   "https://waikastudios.waikastudios.chatgpt.site"
 ]);
