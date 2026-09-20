@@ -54,6 +54,7 @@ function envForHostinger() {
     FORM_SIGNING_SECRET: process.env.FORM_SIGNING_SECRET,
     BRIEFING_FROM_EMAIL: process.env.BRIEFING_FROM_EMAIL,
     BRIEFING_REPLY_TO: process.env.BRIEFING_REPLY_TO,
+    MAKE_ONBOARDING_WEBHOOK_URL: process.env.MAKE_ONBOARDING_WEBHOOK_URL,
     PUBLIC_SITE_ORIGIN: process.env.PUBLIC_SITE_ORIGIN,
     ASSETS: { fetch: assetResponse }
   };

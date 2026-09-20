@@ -16,6 +16,7 @@ Variables que deben añadirse en el panel de Hostinger, nunca en GitHub:
 
 - `RESEND_API_KEY`: clave privada de Resend.
 - `FORM_SIGNING_SECRET`: cadena aleatoria larga para firmar los desafíos del formulario.
+- `MAKE_ONBOARDING_WEBHOOK_URL`: URL del webhook de Make que recibe el briefing.
 - `BRIEFING_FROM_EMAIL`: remitente autorizado por Resend, por ejemplo `Waika Studios <hola@tudominio.com>`.
 - `BRIEFING_REPLY_TO`: correo al que se responderán las confirmaciones.
 - `PUBLIC_SITE_ORIGIN`: origen público exacto, por ejemplo `https://tudominio.com`.
