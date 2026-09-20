@@ -1,26 +1,83 @@
-// Cloudflare Worker entrypoint for the Waika Studios onboarding form.
+// Cloudflare Worker entrypoint for the Waika Studios site and onboarding form.
 const ALLOWED_ORIGINS = new Set([
   "https://waikastudios.waikastudios.chatgpt.site"
 ]);
 
 const MAX_BODY_BYTES = 64 * 1024;
+const CHALLENGE_MIN_AGE_MS = 2_500;
+const CHALLENGE_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+const RATE_WINDOW_MS = 60 * 60 * 1000;
+const RATE_MAX_SUBMISSIONS = 5;
+const rateLimits = new Map();
 const REQUIRED_FIELDS = [
   "name", "email", "Proyecto", "Negocio", "Audiencia", "Objetivo",
   "Resultado_esperado", "Imprescindible", "Secciones", "Materiales"
 ];
+const FIELD_LIMITS = {
+  name: 120,
+  email: 254,
+  Proyecto: 180,
+  Negocio: 3000,
+  Audiencia: 2000,
+  Objetivo: 80,
+  Resultado_esperado: 2000,
+  Necesidades: 500,
+  Imprescindible: 2000,
+  Secciones: 2000,
+  Materiales: 2000,
+  Referencias: 2000,
+  Notas_visuales: 2000,
+  Timing: 1000,
+  Consentimiento: 8,
+  Origen: 500
+};
 
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "script-src 'self' 'sha256-ZCp7Ap07DRWgrGxPiQByI7DU+6Xm/VuIjv/xGXOqeK0='",
+  "style-src 'self' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: https:",
+  "media-src 'self'",
+  "connect-src 'self'",
+  "upgrade-insecure-requests"
+].join("; ");
+
+function applySecurityHeaders(response, pathname = "") {
+  const secured = new Response(response.body, response);
+  secured.headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
+  secured.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  secured.headers.set("X-Content-Type-Options", "nosniff");
+  secured.headers.set("X-Frame-Options", "DENY");
+  secured.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  secured.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
+  secured.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  secured.headers.set("Cross-Origin-Resource-Policy", "same-origin");
+  secured.headers.delete("Server");
+  if (pathname.startsWith("/api/")) secured.headers.set("X-Robots-Tag", "noindex, nofollow");
+  if (pathname === "/onboarding.html" || pathname === "/onboarding") {
+    secured.headers.set("X-Robots-Tag", "noindex, follow, noarchive");
+  }
+  return secured;
+}
+
+function json(body, status = 200, extraHeaders = {}) {
+  return applySecurityHeaders(new Response(JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store"
+      "Cache-Control": "no-store",
+      ...extraHeaders
     }
-  });
+  }), "/api/");
 }
 
 function clean(value, maxLength = 4000) {
-  return String(value ?? "").trim().slice(0, maxLength);
+  return String(value ?? "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim().slice(0, maxLength);
 }
 
 function escapeHtml(value) {
@@ -35,6 +92,86 @@ function escapeHtml(value) {
 
 function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
+}
+
+function allowedPageRequest(request) {
+  const origin = request.headers.get("Origin");
+  if (origin) return ALLOWED_ORIGINS.has(origin);
+  const referer = request.headers.get("Referer");
+  if (!referer) return false;
+  try {
+    return ALLOWED_ORIGINS.has(new URL(referer).origin);
+  } catch {
+    return false;
+  }
+}
+
+function base64Url(bytes) {
+  return btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/g, "");
+}
+
+async function hmac(value, secret) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  return base64Url(new Uint8Array(await crypto.subtle.sign("HMAC", key, encoder.encode(value))));
+}
+
+function safeEqual(left, right) {
+  if (left.length !== right.length) return false;
+  let mismatch = 0;
+  for (let index = 0; index < left.length; index += 1) mismatch |= left.charCodeAt(index) ^ right.charCodeAt(index);
+  return mismatch === 0;
+}
+
+async function createChallenge(env) {
+  if (!env.FORM_SIGNING_SECRET) return json({ message: "Protección del formulario no configurada." }, 503);
+  const issuedAt = Date.now();
+  const nonce = crypto.randomUUID();
+  const payload = `${issuedAt}.${nonce}`;
+  const signature = await hmac(payload, env.FORM_SIGNING_SECRET);
+  return json({
+    token: `${payload}.${signature}`,
+    issuedAt,
+    minWaitMs: CHALLENGE_MIN_AGE_MS,
+    expiresAt: issuedAt + CHALLENGE_MAX_AGE_MS
+  });
+}
+
+async function validChallenge(token, env) {
+  if (!env.FORM_SIGNING_SECRET || typeof token !== "string") return false;
+  const parts = token.split(".");
+  if (parts.length !== 3) return false;
+  const [issuedAtRaw, nonce, signature] = parts;
+  const issuedAt = Number(issuedAtRaw);
+  const age = Date.now() - issuedAt;
+  if (!Number.isFinite(issuedAt) || !/^[0-9a-f-]{36}$/i.test(nonce)) return false;
+  if (age < CHALLENGE_MIN_AGE_MS || age > CHALLENGE_MAX_AGE_MS) return false;
+  const expected = await hmac(`${issuedAtRaw}.${nonce}`, env.FORM_SIGNING_SECRET);
+  return safeEqual(signature, expected);
+}
+
+function withinRateLimit(request) {
+  const client = request.headers.get("CF-Connecting-IP");
+  if (!client) return true;
+  const now = Date.now();
+  const current = rateLimits.get(client);
+  if (!current || now - current.startedAt >= RATE_WINDOW_MS) {
+    rateLimits.set(client, { startedAt: now, count: 1 });
+    return true;
+  }
+  current.count += 1;
+  if (rateLimits.size > 1000) {
+    for (const [key, value] of rateLimits) {
+      if (now - value.startedAt >= RATE_WINDOW_MS) rateLimits.delete(key);
+    }
+  }
+  return current.count <= RATE_MAX_SUBMISSIONS;
 }
 
 function emailHtml(fields) {
@@ -95,9 +232,11 @@ async function sendEmail(env, payload, idempotencyKey) {
 }
 
 async function handleBriefing(request, env) {
-  const origin = request.headers.get("Origin");
-  if (origin && !ALLOWED_ORIGINS.has(origin)) return json({ success: false, message: "Origen no permitido." }, 403);
+  if (!allowedPageRequest(request)) return json({ success: false, message: "Origen no permitido." }, 403);
   if (!env.RESEND_API_KEY) return json({ success: false, message: "El servicio de correo no está configurado." }, 503);
+  if (!request.headers.get("Content-Type")?.toLowerCase().startsWith("application/json")) {
+    return json({ success: false, message: "Tipo de contenido no permitido." }, 415);
+  }
 
   const contentLength = Number(request.headers.get("Content-Length") || 0);
   if (contentLength > MAX_BODY_BYTES) return json({ success: false, message: "La solicitud es demasiado grande." }, 413);
@@ -110,13 +249,21 @@ async function handleBriefing(request, env) {
   }
 
   if (clean(body.website, 200)) return json({ success: true });
+  if (!(await validChallenge(body.formChallenge, env))) {
+    return json({ success: false, message: "La validación del formulario ha caducado. Recarga la página." }, 403);
+  }
+  if (!withinRateLimit(request)) {
+    return json({ success: false, message: "Demasiados envíos. Inténtalo de nuevo más tarde." }, 429, { "Retry-After": "3600" });
+  }
 
-  const fields = Object.fromEntries(Object.entries(body).map(([key, value]) => [key, clean(value)]));
+  const fields = {};
+  for (const [key, maxLength] of Object.entries(FIELD_LIMITS)) fields[key] = clean(body[key], maxLength);
   const missing = REQUIRED_FIELDS.find((key) => !fields[key]);
   if (missing || !validEmail(fields.email) || fields.Consentimiento !== "Sí") {
     return json({ success: false, message: "Faltan datos obligatorios o el correo no es válido." }, 400);
   }
 
+  fields.Proyecto = fields.Proyecto.replace(/[\r\n]+/g, " ");
   const idempotencySource = `${fields.email}|${fields.Proyecto}|${fields.Origen}|${new Date().toISOString().slice(0, 10)}`;
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(idempotencySource));
   const idempotencyKey = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
@@ -159,10 +306,16 @@ async function handleBriefing(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/form-challenge") {
+      if (request.method !== "GET") return json({ success: false, message: "Método no permitido." }, 405, { Allow: "GET" });
+      if (!allowedPageRequest(request)) return json({ success: false, message: "Origen no permitido." }, 403);
+      return createChallenge(env);
+    }
     if (url.pathname === "/api/briefing") {
-      if (request.method !== "POST") return json({ success: false, message: "Método no permitido." }, 405);
+      if (request.method !== "POST") return json({ success: false, message: "Método no permitido." }, 405, { Allow: "POST" });
       return handleBriefing(request, env);
     }
-    return env.ASSETS.fetch(request);
+    const response = await env.ASSETS.fetch(request);
+    return applySecurityHeaders(response, url.pathname);
   }
 };

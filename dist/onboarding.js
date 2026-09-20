@@ -11,7 +11,23 @@ const actions = document.querySelector(".briefing-actions");
 const saveNote = document.querySelector(".briefing-save");
 const storageKey = "waika-briefing-draft-v1";
 const deliveryEndpoint = "/api/briefing";
+const challengeEndpoint = "/api/form-challenge";
 let currentStep = 0;
+let formChallenge = null;
+
+async function getFormChallenge() {
+  if (formChallenge && Date.now() < formChallenge.expiresAt - 60_000) return formChallenge;
+  const response = await fetch(challengeEndpoint, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+  const result = await response.json();
+  if (!response.ok || !result.token) throw new Error("No se pudo validar el formulario.");
+  formChallenge = result;
+  return result;
+}
 
 function readData() {
   const data = {};
@@ -85,8 +101,19 @@ function showCompletion(confirmationSent, recipientEmail) {
 
 async function submitBriefing() {
   const data = readData();
+  let challenge;
+  try {
+    challenge = await getFormChallenge();
+    const remainingWait = challenge.issuedAt + challenge.minWaitMs - Date.now();
+    if (remainingWait > 0) await new Promise((resolve) => window.setTimeout(resolve, remainingWait + 100));
+  } catch {
+    status.textContent = "No pudimos validar el formulario. Recarga la página e inténtalo de nuevo.";
+    status.className = "form-status error";
+    return;
+  }
   const payload = {
-    website: "",
+    website: data.website || "",
+    formChallenge: challenge.token,
     name: data.name,
     email: data.email,
     Proyecto: data.project,
@@ -122,6 +149,7 @@ async function submitBriefing() {
     localStorage.removeItem(storageKey);
     showCompletion(result.confirmationSent === true, data.email);
   } catch (error) {
+    formChallenge = null;
     nextButton.disabled = false;
     backButton.disabled = false;
     nextButton.innerHTML = "Enviar briefing <span>↗</span>";
@@ -140,3 +168,4 @@ backButton.addEventListener("click", () => showStep(Math.max(0, currentStep - 1)
 form.addEventListener("input", saveDraft);
 restoreDraft();
 showStep(0);
+getFormChallenge().catch(() => {});
