@@ -10,7 +10,7 @@ const progress = document.querySelector(".briefing-progress");
 const actions = document.querySelector(".briefing-actions");
 const saveNote = document.querySelector(".briefing-save");
 const storageKey = "waika-briefing-draft-v1";
-const deliveryEndpoint = "https://formsubmit.co/ajax/waikastudios@gmail.com";
+const deliveryEndpoint = "/api/briefing";
 let currentStep = 0;
 
 function readData() {
@@ -84,9 +84,7 @@ function showCompletion() {
 async function submitBriefing() {
   const data = readData();
   const payload = {
-    _subject: `Nuevo briefing: ${data.project}`,
-    _template: "table",
-    _honey: "",
+    website: "",
     name: data.name,
     email: data.email,
     Proyecto: data.project,
@@ -118,7 +116,7 @@ async function submitBriefing() {
       body: JSON.stringify(payload)
     });
     const result = await response.json();
-    if (!response.ok || result.success === false) throw new Error(result.message || "No se pudo entregar el briefing.");
+    if (!response.ok || result.success !== true) throw new Error(result.message || "No se pudo entregar el briefing.");
     localStorage.removeItem(storageKey);
     showCompletion();
   } catch (error) {
