@@ -69,13 +69,15 @@ function validateStep() {
   return true;
 }
 
-function showCompletion() {
+function showCompletion(confirmationSent, recipientEmail) {
   steps.forEach((step) => { step.classList.remove("is-active"); step.hidden = true; });
   progress.hidden = true;
   actions.hidden = true;
   saveNote.hidden = true;
   form.classList.add("is-complete");
-  status.textContent = "Briefing enviado. Ya está en camino a Waika Studios y responderemos al correo indicado.";
+  status.textContent = confirmationSent
+    ? `Briefing recibido. También enviamos una confirmación a ${recipientEmail}. Te contactaremos lo antes posible.`
+    : "Briefing recibido. Ya está en Waika Studios y te contactaremos lo antes posible.";
   status.className = "form-status ok briefing-success";
   status.setAttribute("tabindex", "-1");
   status.focus();
@@ -118,7 +120,7 @@ async function submitBriefing() {
     const result = await response.json();
     if (!response.ok || result.success !== true) throw new Error(result.message || "No se pudo entregar el briefing.");
     localStorage.removeItem(storageKey);
-    showCompletion();
+    showCompletion(result.confirmationSent === true, data.email);
   } catch (error) {
     nextButton.disabled = false;
     backButton.disabled = false;

@@ -59,6 +59,41 @@ function emailHtml(fields) {
   </body></html>`;
 }
 
+function confirmationEmailHtml(fields) {
+  const firstName = clean(fields.name, 120).split(/\s+/)[0] || "Hola";
+
+  return `<!doctype html><html lang="es"><body style="margin:0;background:#f4f4f1;color:#0d100e;font-family:Arial,sans-serif">
+    <div style="max-width:640px;margin:0 auto;padding:40px 20px">
+      <div style="background:#0d100e;padding:18px 22px;color:#9bdc28;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">Waika Studios</div>
+      <div style="background:#ffffff;padding:36px 28px;border:1px solid #dfe4df">
+        <p style="margin:0 0 14px;font-size:16px">Hola, ${escapeHtml(firstName)}.</p>
+        <h1 style="margin:0 0 18px;font-size:30px;line-height:1.08;letter-spacing:-.03em">Hemos recibido tu briefing.</h1>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:#39433d">Gracias por compartirnos la información de <strong>${escapeHtml(fields.Proyecto)}</strong>. Ya estamos revisando tus objetivos, necesidades y el alcance del proyecto.</p>
+        <p style="margin:0 0 26px;font-size:16px;line-height:1.65;color:#39433d">Nos pondremos en contacto contigo lo antes posible con los siguientes pasos y una propuesta pensada para tu proyecto.</p>
+        <div style="padding:18px 20px;background:#eff7e3;border-left:4px solid #79b900">
+          <p style="margin:0;font-size:14px;line-height:1.55">Si quieres añadir algún detalle, puedes responder directamente a este correo.</p>
+        </div>
+        <p style="margin:28px 0 0;font-size:15px;line-height:1.5"><strong>Waika Studios</strong><br><span style="color:#66716a">Estrategia, diseño web e IA aplicada.</span></p>
+      </div>
+    </div>
+  </body></html>`;
+}
+
+async function sendEmail(env, payload, idempotencyKey) {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+      "Idempotency-Key": idempotencyKey
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await response.json().catch(() => ({}));
+  return { response, result };
+}
+
 async function handleBriefing(request, env) {
   const origin = request.headers.get("Origin");
   if (origin && !ALLOWED_ORIGINS.has(origin)) return json({ success: false, message: "Origen no permitido." }, 403);
@@ -86,29 +121,39 @@ async function handleBriefing(request, env) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(idempotencySource));
   const idempotencyKey = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 
-  const resendResponse = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-      "Idempotency-Key": `waika-briefing-${idempotencyKey}`
-    },
-    body: JSON.stringify({
-      from: "Waika Studios <onboarding@resend.dev>",
-      to: ["waikastudios@gmail.com"],
-      reply_to: fields.email,
-      subject: `Nuevo briefing: ${fields.Proyecto}`.slice(0, 180),
-      html: emailHtml(fields)
-    })
-  });
+  const from = clean(env.BRIEFING_FROM_EMAIL, 320) || "Waika Studios <onboarding@resend.dev>";
+  const replyTo = clean(env.BRIEFING_REPLY_TO, 254) || "waikastudios@gmail.com";
+  const briefingDelivery = await sendEmail(env, {
+    from,
+    to: ["waikastudios@gmail.com"],
+    reply_to: fields.email,
+    subject: `Nuevo briefing: ${fields.Proyecto}`.slice(0, 180),
+    html: emailHtml(fields)
+  }, `waika-briefing-${idempotencyKey}`);
 
-  const resendResult = await resendResponse.json().catch(() => ({}));
-  if (!resendResponse.ok || !resendResult.id) {
-    console.error("Resend rejected briefing", resendResponse.status, resendResult);
+  if (!briefingDelivery.response.ok || !briefingDelivery.result.id) {
+    console.error("Resend rejected briefing", briefingDelivery.response.status, briefingDelivery.result);
     return json({ success: false, message: "El correo no pudo entregarse. Inténtalo de nuevo en unos minutos." }, 502);
   }
 
-  return json({ success: true, deliveryId: resendResult.id });
+  const confirmationDelivery = await sendEmail(env, {
+    from,
+    to: [fields.email],
+    reply_to: replyTo,
+    subject: "Hemos recibido tu briefing — Waika Studios",
+    html: confirmationEmailHtml(fields)
+  }, `waika-confirmation-${idempotencyKey}`);
+  const confirmationSent = confirmationDelivery.response.ok && Boolean(confirmationDelivery.result.id);
+
+  if (!confirmationSent) {
+    console.error("Resend rejected briefing confirmation", confirmationDelivery.response.status, confirmationDelivery.result);
+  }
+
+  return json({
+    success: true,
+    deliveryId: briefingDelivery.result.id,
+    confirmationSent
+  });
 }
 
 export default {
