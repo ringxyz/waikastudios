@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="description" content="Briefing inicial para construir tu proyecto digital con Waika Studios.">
+<meta name="robots" content="noindex,follow,noarchive">
+<meta name="theme-color" content="#0d100e">
+<link rel="canonical" href="https://waikastudios.waikastudios.chatgpt.site/onboarding.html">
+<title>Empezar proyecto · Waika Studios</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="onboarding-page">
+<a class="skip-link" href="#briefing">Saltar al formulario</a>
+<header class="site-header is-scrolled onboarding-header">
+  <a class="brand" href="/" aria-label="Volver a Waika Studios"><img src="/waika-logo-horizontal.png" width="373" height="113" alt="Waika Studios"></a>
+  <a class="header-quiet-link" href="/">Volver a la web</a>
+</header>
+<main id="briefing" class="briefing-shell">
+  <div class="briefing-intro">
+    <p class="eyebrow">Briefing inicial · 6–8 min</p>
+    <h1>Vamos a darle<br><em>dirección.</em></h1>
+    <p>Unas preguntas bien elegidas para entender tu negocio, ordenar la idea y llegar a una primera propuesta con criterio.</p>
+    <div class="briefing-aside"><span>Waika Studios</span><span>Sin compromiso · Puedes volver atrás</span></div>
+  </div>
+  <form id="briefing-form" class="briefing-form" novalidate data-recipient="waikastudios@gmail.com">
+    <div class="form-trap" aria-hidden="true">
+      <label for="company-website">Deja este campo vacío</label>
+      <input id="company-website" name="website" type="text" tabindex="-1" autocomplete="off">
+    </div>
+    <div class="briefing-progress" aria-label="Progreso del briefing">
+      <div class="briefing-progress-top"><span id="step-label">Paso 1 de 7</span><span id="progress-percent">14%</span></div>
+      <div class="briefing-progress-track"><span id="progress-bar"></span></div>
+    </div>
+
+    <fieldset class="briefing-step is-active" data-step="1">
+      <legend tabindex="-1">Primero, pongamos nombre al proyecto.</legend>
+      <p class="step-help">Así podremos leer tus respuestas con el contexto adecuado.</p>
+      <label>Tu nombre<input name="name" autocomplete="name" maxlength="120" placeholder="Nombre y apellidos" required></label>
+      <label>Nombre del negocio o proyecto<input name="project" autocomplete="organization" maxlength="180" placeholder="¿Cómo se llama?" required></label>
+    </fieldset>
+
+    <fieldset class="briefing-step" data-step="2">
+      <legend tabindex="-1">¿Qué haces y para quién?</legend>
+      <p class="step-help">No hace falta que suene perfecto. Queremos entenderlo como lo explicarías a un cliente.</p>
+      <label>Describe tu negocio<textarea name="business" rows="5" maxlength="3000" placeholder="Qué vendes, qué haces y qué te hace diferente..." required></textarea></label>
+      <label>¿A quién quieres atraer?<textarea name="audience" rows="4" maxlength="2000" placeholder="Tipo de cliente, sector, ubicación, nivel de conocimiento..." required></textarea></label>
+    </fieldset>
+
+    <fieldset class="briefing-step" data-step="3">
+      <legend tabindex="-1">¿Qué debería conseguir la web?</legend>
+      <p class="step-help">Elige el resultado más importante ahora. Luego podrás añadir contexto.</p>
+      <div class="choice-grid">
+        <label class="choice"><input type="radio" name="goal" value="vender" required><span>Vender o captar solicitudes</span></label>
+        <label class="choice"><input type="radio" name="goal" value="presentar"><span>Presentar el negocio</span></label>
+        <label class="choice"><input type="radio" name="goal" value="reservar"><span>Conseguir reservas o citas</span></label>
+        <label class="choice"><input type="radio" name="goal" value="automatizar"><span>Ordenar o automatizar algo</span></label>
+      </div>
+      <label>¿Qué tendría que pasar para decir “ha funcionado”?<textarea name="success" rows="3" maxlength="2000" placeholder="Más llamadas, más confianza, más ventas, ahorrar tiempo..." required></textarea></label>
+    </fieldset>
+
+    <fieldset class="briefing-step" data-step="4">
+      <legend tabindex="-1">¿Qué necesitas construir?</legend>
+      <p class="step-help">Marca todo lo que aplique. Esto nos ayuda a medir el alcance desde el principio.</p>
+      <div class="choice-grid choice-grid-wide">
+        <label class="choice"><input type="checkbox" name="needs" value="landing"><span>Landing de campaña</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="corporativa"><span>Web corporativa</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="portfolio"><span>Portfolio o catálogo</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="herramienta"><span>Herramienta o formulario</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="contenido"><span>Contenido y redes</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="ia"><span>IA o automatización</span></label>
+      </div>
+      <label>¿Hay algo imprescindible que deba estar?<textarea name="mustHave" rows="3" maxlength="2000" placeholder="Una sección, integración, idioma, función o limitación..." required></textarea></label>
+    </fieldset>
+
+    <fieldset class="briefing-step" data-step="5">
+      <legend tabindex="-1">¿Qué debe contar la página?</legend>
+      <p class="step-help">Piensa en las dudas que una persona necesita resolver antes de contactarte.</p>
+      <label>¿Qué páginas o secciones imaginas?<textarea name="sections" rows="4" maxlength="2000" placeholder="Inicio, servicios, quiénes somos, casos, contacto..." required></textarea></label>
+      <label>¿Qué materiales ya tienes?<textarea name="materials" rows="4" maxlength="2000" placeholder="Logo, fotos, textos, vídeos, testimonios, catálogo, redes..." required></textarea></label>
+    </fieldset>
+
+    <fieldset class="briefing-step" data-step="6">
+      <legend tabindex="-1">Enséñanos el universo visual.</legend>
+      <p class="step-help">Las referencias pueden ser webs, perfiles, marcas o cualquier cosa que explique el tono.</p>
+      <label>Webs o referencias que te gustan<textarea name="referenceUrls" rows="4" maxlength="2000" placeholder="Pega una o varias URLs, una por línea..."></textarea></label>
+      <label>¿Qué te gusta de ellas y qué quieres evitar?<textarea name="referenceNotes" rows="4" maxlength="2000" placeholder="Color, ritmo, tipografía, movimiento, fotografía, tono..."></textarea></label>
+    </fieldset>
+
+    <fieldset class="briefing-step" data-step="7">
+      <legend tabindex="-1">Último paso: cómo seguimos.</legend>
+      <p class="step-help">Revisaremos tus respuestas y te escribiremos a este correo con el siguiente paso.</p>
+      <label>Email de contacto<input name="email" type="email" autocomplete="email" maxlength="254" placeholder="tu@email.com" required></label>
+      <label>¿Hay una fecha o contexto importante?<textarea name="timing" rows="3" maxlength="1000" placeholder="Lanzamiento, campaña, evento, urgencia o ninguna fecha concreta..."></textarea></label>
+      <label class="consent"><input type="checkbox" name="consent" required><span>Acepto que Waika Studios use estos datos para responder a mi solicitud.</span></label>
+    </fieldset>
+
+    <div class="briefing-actions">
+      <button type="button" class="button-secondary" id="back-button">Atrás</button>
+      <button type="button" class="button-primary" id="next-button">Continuar <span>↗</span></button>
+    </div>
+    <p id="briefing-status" class="form-status" role="status" aria-live="polite"></p>
+    <p class="briefing-save">Tus respuestas se guardan en este dispositivo mientras completas el briefing.</p>
+  </form>
+</main>
+<script src="/onboarding.js"></script>
+</body>
+</html>
