@@ -56,7 +56,7 @@ img { max-width: 100%; display: block; }
   border-color: var(--line);
   backdrop-filter: blur(18px);
 }
-.brand img { width: 152px; height: auto; }
+.brand img { width: 174px; height: auto; }
 .site-header nav { display: flex; gap: 2rem; font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .site-header nav a, .header-cta { transition: transform .25s ease, opacity .25s ease, background .25s ease; }
 .site-header nav a:hover { transform: translateY(-2px); opacity: .68; }
@@ -88,21 +88,27 @@ h2 { font-size: clamp(2.8rem, 6vw, 5.8rem); line-height: .9; }
 h3 { letter-spacing: -.04em; line-height: .96; }
 
 .hero {
-  min-height: 220dvh;
+  min-height: 320dvh;
   padding: 0;
+  background: var(--paper-2);
 }
 .hero-sticky {
   position: sticky;
   top: 0;
   height: 100dvh;
-  padding: 8rem clamp(1rem, 4vw, 4rem) clamp(2rem, 4vw, 4rem);
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
-  align-items: center;
-  gap: clamp(2rem, 5vw, 6rem);
   overflow: hidden;
+  isolation: isolate;
 }
-.hero-grid { position: relative; z-index: 2; max-width: 760px; }
+.hero-grid {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: clamp(1rem, 5vw, 5.5rem);
+  width: min(700px, 58vw);
+  transform: translateY(-50%);
+  opacity: var(--hero-copy-opacity, 1);
+  transition: opacity .18s linear;
+}
 .hero-copy { max-width: 480px; font-size: clamp(1.05rem, 1.7vw, 1.4rem); line-height: 1.35; }
 .hero-actions { display: flex; align-items: center; gap: 1.25rem; margin-top: 2rem; }
 .cta-button { min-height: 56px; display: inline-flex; align-items: center; justify-content: center; padding: .85rem 1.35rem; border: 1px solid transparent; font: 800 13px var(--mono); text-transform: uppercase; letter-spacing: .03em; transition: transform .25s ease, background .25s ease, color .25s ease; }
@@ -115,35 +121,46 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .cta-button-dark:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 .hero-work-link { min-height: 44px; display: inline-flex; align-items: center; border-bottom: 1px solid var(--ink); font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .hero-film {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 720px);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
   margin: 0;
   overflow: hidden;
-  border: 1px solid var(--ink);
   background: var(--paper-2);
-  transform-origin: center;
-  will-change: transform;
 }
-.hero-sequence-viewport { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper-2); }
-.hero-film-poster, .hero-sequence { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero-sequence-viewport { position: absolute; inset: 0; overflow: hidden; background: var(--paper-2); }
+.hero-film-poster, .hero-sequence { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .hero-sequence { position: absolute; inset: 0; opacity: 0; transition: opacity .2s ease; }
 .hero-sequence.is-ready { opacity: 1; }
+.hero-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(245,246,240,.94) 0%, rgba(245,246,240,.78) 30%, rgba(245,246,240,.18) 62%, transparent 82%);
+  opacity: var(--hero-copy-opacity, 1);
+  transition: opacity .24s linear;
+}
 .hero-film figcaption {
-  min-height: 38px;
+  position: absolute;
+  z-index: 2;
+  right: clamp(1rem, 4vw, 4rem);
+  bottom: 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: .6rem .8rem;
-  border-top: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
+  gap: 1.5rem;
+  padding: .65rem .8rem;
+  background: rgba(245,246,240,.82);
+  color: var(--ink);
   font: 500 11px var(--mono);
   letter-spacing: .08em;
   text-transform: uppercase;
+  opacity: var(--hero-cue-opacity, 1);
+  transition: opacity .24s linear;
 }
-.hero-film figcaption span:last-child { color: var(--acid); font-variant-numeric: tabular-nums; }
+.hero-film figcaption span:last-child { color: var(--acid-deep); font-variant-numeric: tabular-nums; }
 .scroll-ruler {
   position: absolute;
   left: clamp(1rem, 4vw, 4rem);
@@ -436,6 +453,7 @@ h3 { letter-spacing: -.04em; line-height: .96; }
 .briefing-intro > p:not(.eyebrow) { max-width: 28rem; font-size: 1.1rem; line-height: 1.5; }
 .briefing-aside { display: flex; flex-direction: column; gap: .5rem; margin-top: 5rem; padding-top: 1rem; border-top: 1px solid var(--line); font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .briefing-form { align-self: start; min-width: 0; padding: clamp(1.2rem, 3vw, 3rem); background: var(--ink); color: var(--paper); }
+.form-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .briefing-progress { margin-bottom: clamp(3rem, 7vw, 6rem); }
 .briefing-progress-top { display: flex; justify-content: space-between; gap: 1rem; color: var(--acid); font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .briefing-progress-track { height: 3px; margin-top: .8rem; background: rgba(255,255,255,.2); }
@@ -491,7 +509,7 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .site-header { grid-template-columns: 1fr auto auto; height: 68px; }
   .site-header.onboarding-header { grid-template-columns: 1fr auto; }
   .site-header nav { display: none; }
-  .brand img { width: 132px; }
+  .brand img { width: 146px; }
   .header-cta { padding: .7rem .75rem; min-height: 44px; }
   .site-header .menu-toggle { display: grid; grid-template-rows: repeat(3, 2px); gap: 5px; align-content: center; width: 44px; height: 44px; margin-right: .35rem; padding: 10px; border: 1px solid var(--ink); background: transparent; cursor: pointer; }
   .menu-toggle span { display: block; width: 100%; height: 2px; background: var(--ink); transition: transform .25s ease, opacity .25s ease; }
@@ -505,12 +523,14 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .scene { min-height: auto; padding: 6rem 1.1rem; }
   h1 { font-size: clamp(3.5rem, 15vw, 5.2rem); margin-top: 5rem; }
   h2 { font-size: clamp(2.8rem, 12vw, 4.8rem); }
-  .hero { min-height: 190dvh; padding: 0; }
-  .hero-sticky { height: 100dvh; grid-template-columns: 1fr; align-content: center; gap: 1.25rem; padding: 5.25rem 1.1rem 1rem; }
-  .hero h1 { margin-top: 2rem; margin-bottom: 1.25rem; }
+  .hero { min-height: 300dvh; padding: 0; }
+  .hero-sticky { height: 100dvh; }
+  .hero-grid { top: auto; bottom: clamp(5rem, 10svh, 7rem); left: 1.1rem; width: calc(100% - 2.2rem); transform: none; }
+  .hero h1 { margin-top: 1.5rem; margin-bottom: 1.1rem; font-size: clamp(3rem, 14vw, 4.35rem); }
   .hero-copy { margin-left: 0; }
   .hero-actions { margin-left: 0; }
-  .hero-film { width: 100%; }
+  .hero-wash { background: linear-gradient(0deg, rgba(245,246,240,.98) 0%, rgba(245,246,240,.88) 42%, rgba(245,246,240,.24) 70%, rgba(245,246,240,.12) 100%); }
+  .hero-film figcaption { right: 1rem; bottom: 1rem; }
   .scroll-ruler { display: none; }
   .manifesto, .section-head, .service, .horizontal-intro, .offer, .about, .onboarding, footer { grid-template-columns: 1fr; }
   .portfolio-heading { grid-template-columns: 1fr; padding-top: 7rem; }
@@ -560,7 +580,7 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   .briefing-actions button { min-height: 56px; }
   .site-header { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
   .onboarding-header .header-quiet-link { font-size: 10px; }
-  .onboarding-header .brand img { width: 118px; }
+  .onboarding-header .brand img { width: 136px; }
   .hero-actions { align-items: flex-start; flex-direction: column; gap: .75rem; }
   .hero-actions .cta-button { width: 100%; }
   .portfolio-heading { padding-bottom: 3rem; }
@@ -579,6 +599,7 @@ footer span { justify-self: end; font: 11px var(--mono); text-transform: upperca
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
   [data-scene], [data-stagger] { opacity: 1; transform: none; }
   .rail { transform: none !important; }
+  .hero { min-height: 100dvh; }
   .hero-sequence { display: none; }
   .briefing-step.is-active { animation: none; }
 }

@@ -42,7 +42,23 @@ async function drawHeroFrame(index) {
   requestedHeroFrame = index;
   const frame = await loadHeroFrame(index);
   if (!frame || index !== requestedHeroFrame || !heroSequenceContext) return;
-  heroSequenceContext.drawImage(frame, 0, 0, heroSequence.width, heroSequence.height);
+  const width = Math.max(heroSequence.clientWidth, 1);
+  const height = Math.max(heroSequence.clientHeight, 1);
+  const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+  const pixelWidth = Math.round(width * ratio);
+  const pixelHeight = Math.round(height * ratio);
+  if (heroSequence.width !== pixelWidth || heroSequence.height !== pixelHeight) {
+    heroSequence.width = pixelWidth;
+    heroSequence.height = pixelHeight;
+  }
+  const scale = Math.max(pixelWidth / frame.naturalWidth, pixelHeight / frame.naturalHeight);
+  const frameWidth = frame.naturalWidth * scale;
+  const frameHeight = frame.naturalHeight * scale;
+  heroSequenceContext.clearRect(0, 0, pixelWidth, pixelHeight);
+  heroSequenceContext.imageSmoothingEnabled = true;
+  heroSequenceContext.imageSmoothingQuality = "high";
+  heroSequenceContext.drawImage(frame, (pixelWidth - frameWidth) / 2, (pixelHeight - frameHeight) / 2, frameWidth, frameHeight);
+  heroSequence.dataset.frame = String(index + 1);
   heroSequence.classList.add("is-ready");
 }
 
@@ -246,7 +262,7 @@ function updateHorizontalRail() {
 function updateHeroScrub() {
   if (prefersReducedMotion) return;
   const headline = document.querySelector("[data-scrub='headline']");
-  const film = document.querySelector(".hero-film");
+  const heroGrid = document.querySelector(".hero-grid");
   if (!hero) return;
   const rect = hero.getBoundingClientRect();
   const travel = Math.max(hero.offsetHeight - window.innerHeight, 1);
@@ -254,7 +270,14 @@ function updateHeroScrub() {
   const frameIndex = Math.round(progress * Math.max(heroFrameCount - 1, 0));
   if (frameIndex !== requestedHeroFrame) drawHeroFrame(frameIndex);
   if (headline) headline.style.transform = `translate3d(0, ${progress * -34}px, 0)`;
-  if (film) film.style.transform = `translate3d(0, ${progress * -12}px, 0) scale(${1 + progress * .012})`;
+  const copyOpacity = clamp(1 - progress / .34, 0, 1);
+  hero.style.setProperty("--hero-copy-opacity", copyOpacity.toFixed(3));
+  hero.style.setProperty("--hero-cue-opacity", String(progress < .08 ? 1 : 0));
+  if (heroGrid) {
+    const hidden = progress > .38;
+    heroGrid.style.visibility = hidden ? "hidden" : "visible";
+    heroGrid.setAttribute("aria-hidden", String(hidden));
+  }
 }
 
 function updateSpotlight(event) {
