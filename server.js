@@ -1,5 +1,4 @@
-import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { extname, join, normalize, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer } from "node:http";
@@ -35,14 +34,13 @@ async function assetResponse(request) {
   const path = assetPath(new URL(request.url).pathname);
   if (!path) return new Response("Not found", { status: 404 });
   try {
-    const info = await stat(path);
-    if (!info.isFile()) return new Response("Not found", { status: 404 });
+    const body = await readFile(path);
     const headers = {
       "Content-Type": contentTypes[extname(path).toLowerCase()] || "application/octet-stream",
-      "Content-Length": String(info.size)
+      "Content-Length": String(body.byteLength)
     };
     if (request.method === "HEAD") return new Response(null, { status: 200, headers });
-    return new Response(createReadStream(path), { status: 200, headers });
+    return new Response(body, { status: 200, headers });
   } catch {
     return new Response("Not found", { status: 404 });
   }

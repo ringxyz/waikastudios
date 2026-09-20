@@ -5,6 +5,7 @@
   "description": "Waika Studios website",
   "type": "module",
   "scripts": {
+    "build": "node -e \"console.log('No build step required')\"",
     "start": "node server.js",
     "test": "node tests/worker.test.mjs"
   },
