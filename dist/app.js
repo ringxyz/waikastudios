@@ -9,9 +9,51 @@ const status = document.querySelector("#form-status");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const menuToggle = document.querySelector(".menu-toggle");
 const mobileNav = document.querySelector("#mobile-nav");
+const hero = document.querySelector(".hero");
+const heroSequence = document.querySelector("[data-frame-sequence]");
+const heroSequenceContext = heroSequence?.getContext("2d");
+const heroFrameCount = Number(heroSequence?.dataset.frameCount || 0);
+const heroFrames = new Map();
+let requestedHeroFrame = 0;
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function heroFrameUrl(index) {
+  return `/media/giro-frames/frame-${String(index + 1).padStart(3, "0")}.webp`;
+}
+
+function loadHeroFrame(index) {
+  if (!heroSequence || !heroSequenceContext || index < 0 || index >= heroFrameCount) return Promise.resolve(null);
+  if (heroFrames.has(index)) return heroFrames.get(index);
+  const frame = new Image();
+  const promise = new Promise((resolve) => {
+    frame.onload = () => resolve(frame);
+    frame.onerror = () => resolve(null);
+  });
+  frame.decoding = "async";
+  frame.src = heroFrameUrl(index);
+  heroFrames.set(index, promise);
+  return promise;
+}
+
+async function drawHeroFrame(index) {
+  requestedHeroFrame = index;
+  const frame = await loadHeroFrame(index);
+  if (!frame || index !== requestedHeroFrame || !heroSequenceContext) return;
+  heroSequenceContext.drawImage(frame, 0, 0, heroSequence.width, heroSequence.height);
+  heroSequence.classList.add("is-ready");
+}
+
+function initHeroSequence() {
+  if (!heroSequence || prefersReducedMotion || heroFrameCount === 0) return;
+  drawHeroFrame(0);
+  const preload = () => {
+    for (let index = 1; index < heroFrameCount; index += 1) loadHeroFrame(index);
+  };
+  if ("requestIdleCallback" in window) window.requestIdleCallback(preload, { timeout: 1200 });
+  else window.setTimeout(preload, 250);
 }
 
 function updateHeader() {
@@ -187,6 +229,7 @@ function initMarquee() {
 
 initCoverflow();
 initMarquee();
+initHeroSequence();
 
 function updateHorizontalRail() {
   if (!horizontal || !rail || prefersReducedMotion || window.innerWidth <= 860) return;
@@ -203,10 +246,15 @@ function updateHorizontalRail() {
 function updateHeroScrub() {
   if (prefersReducedMotion) return;
   const headline = document.querySelector("[data-scrub='headline']");
-  const logo = document.querySelector(".kinetic-logo");
-  const progress = clamp(window.scrollY / window.innerHeight, 0, 1);
+  const film = document.querySelector(".hero-film");
+  if (!hero) return;
+  const rect = hero.getBoundingClientRect();
+  const travel = Math.max(hero.offsetHeight - window.innerHeight, 1);
+  const progress = clamp(-rect.top / travel, 0, 1);
+  const frameIndex = Math.round(progress * Math.max(heroFrameCount - 1, 0));
+  if (frameIndex !== requestedHeroFrame) drawHeroFrame(frameIndex);
   if (headline) headline.style.transform = `translate3d(0, ${progress * -34}px, 0)`;
-  if (logo) logo.style.transform = `rotate(${-8 + progress * 18}deg) translate3d(${progress * -56}px, ${progress * 30}px, 0)`;
+  if (film) film.style.transform = `translate3d(0, ${progress * -12}px, 0) scale(${1 + progress * .012})`;
 }
 
 function updateSpotlight(event) {
@@ -241,7 +289,7 @@ function onScroll() {
 }
 
 window.addEventListener("scroll", onScroll, { passive: true });
-window.addEventListener("resize", updateHorizontalRail);
+window.addEventListener("resize", () => { updateHorizontalRail(); updateHeroScrub(); });
 onScroll();
 
 form?.addEventListener("submit", (event) => {
