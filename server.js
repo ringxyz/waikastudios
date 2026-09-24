@@ -39,7 +39,7 @@ function assetPath(urlPath) {
   if (pathname.endsWith("/") && pathname !== "/") pathname = pathname.slice(0, -1);
   const relative = pathname === "/" ? "index.html" : cleanRoutes.get(pathname) || pathname.replace(/^\/+/, "");
   const candidate = normalize(join(publicRoot, relative));
-  if (candidate !== publicRoot && !candidate.startsWith(`${publicRoot}${sep}`)) return null;
+  if (candidate !== publicRoot && !candidate.startsWith(publicRoot + sep)) return null;
   return candidate;
 }
 
@@ -73,8 +73,8 @@ function envForHostinger() {
 
 function nodeRequest(request) {
   const protocol = request.headers["x-forwarded-proto"] || "http";
-  const host = request.headers.host || `localhost:${port}`;
-  const url = `${protocol}://${host}${request.url}`;
+  const host = request.headers.host || "localhost:" + port;
+  const url = protocol + "://" + host + request.url;
   const headers = new Headers();
   for (const [key, value] of Object.entries(request.headers)) {
     if (Array.isArray(value)) headers.set(key, value.join(", "));
@@ -126,5 +126,5 @@ const server = createServer(async (request, reply) => {
 });
 
 server.listen(port, "0.0.0.0", () => {
-  console.log(`Waika Studios listening on port ${port}`);
+  console.log("Waika Studios listening on port " + port);
 });
