@@ -5,11 +5,11 @@
   "description": "Waika Studios website",
   "type": "module",
   "scripts": {
-    "build": "node -e \"console.log('No build step required')\"",
+    "build": "node scripts/verify-site.mjs",
     "start": "node server.js",
     "test": "node tests/worker.test.mjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22 <25"
   }
 }

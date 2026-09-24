@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'sha256-ZCp7Ap07DRWgrGxPiQByI7DU+6Xm/VuIjv/xGXOqeK0='; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' 'sha256-ZCp7Ap07DRWgrGxPiQByI7DU+6Xm/VuIjv/xGXOqeK0='; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="description" content="Estudio de diseño web, estrategia digital e inteligencia artificial aplicada. Creamos webs, contenido y herramientas a medida desde España para negocios internacionales.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
@@ -30,7 +30,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://waikastudios.waikastudios.chatgpt.site/#organization","name":"Waika Studios","url":"https://waikastudios.waikastudios.chatgpt.site/","logo":{"@type":"ImageObject","url":"https://waikastudios.waikastudios.chatgpt.site/waika-logo-horizontal.png","width":373,"height":113},"email":"waikastudios@gmail.com","foundingDate":"2016","description":"Estudio de diseño web, estrategia digital, contenido e inteligencia artificial aplicada.","areaServed":["España","Canadá","Estados Unidos","Panamá","Venezuela"]},{"@type":"WebSite","@id":"https://waikastudios.waikastudios.chatgpt.site/#website","url":"https://waikastudios.waikastudios.chatgpt.site/","name":"Waika Studios","inLanguage":"es","publisher":{"@id":"https://waikastudios.waikastudios.chatgpt.site/#organization"}}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://waikastudios.waikastudios.chatgpt.site/#organization","name":"Waika Studios","url":"https://waikastudios.waikastudios.chatgpt.site/","logo":{"@type":"ImageObject","url":"https://waikastudios.waikastudios.chatgpt.site/waika-logo-horizontal.png","width":373,"height":113},"email":"waikastudios@gmail.com","description":"Estudio de diseño web, estrategia digital, contenido e inteligencia artificial aplicada.","areaServed":["España","Canadá","Estados Unidos","Panamá","Venezuela"]},{"@type":"WebSite","@id":"https://waikastudios.waikastudios.chatgpt.site/#website","url":"https://waikastudios.waikastudios.chatgpt.site/","name":"Waika Studios","inLanguage":"es","publisher":{"@id":"https://waikastudios.waikastudios.chatgpt.site/#organization"}}]}
 </script>
 </head>
 <body>
@@ -40,18 +40,22 @@
     <img src="/waika-logo-horizontal.png" width="373" height="113" alt="Waika Studios">
   </a>
   <nav aria-label="Navegación principal">
-    <a href="#servicios">Servicios</a>
-    <a href="#portafolio">Portafolio</a>
-    <a href="#metodo">Método</a>
+    <a href="#servicios" data-i18n="nav.services">Servicios</a>
+    <a href="#portafolio" data-i18n="nav.work">Proyectos</a>
+    <a href="/aplicaciones" data-i18n="nav.apps">Aplicaciones</a>
+    <a href="/planes" data-i18n="nav.pricing">Planes</a>
   </nav>
   <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span><b class="sr-only">Abrir menú</b></button>
-  <a class="header-cta" href="/onboarding.html">Empezar</a>
+  <a class="header-cta" href="/onboarding.html" data-i18n="nav.start">Empezar</a>
 </header>
 <nav class="mobile-nav" id="mobile-nav" aria-label="Navegación móvil">
-  <a href="#servicios">Servicios</a>
-  <a href="#portafolio">Portafolio</a>
-  <a href="#metodo">Método</a>
-  <a href="/onboarding.html">Empezar un proyecto <span>↗</span></a>
+  <a href="#servicios" data-i18n="nav.services">Servicios</a>
+  <a href="#portafolio" data-i18n="nav.work">Proyectos</a>
+  <a href="/aplicaciones" data-i18n="nav.apps">Aplicaciones</a>
+  <a href="/planes" data-i18n="nav.pricing">Planes</a>
+  <a href="#metodo" data-i18n="nav.method">Método</a>
+  <a href="/preguntas" data-i18n="nav.faq">Preguntas frecuentes</a>
+  <a href="/onboarding.html"><span data-i18n="nav.startProject">Empezar un proyecto</span> <span>↗</span></a>
 </nav>
 
 <main id="contenido">
@@ -60,18 +64,18 @@
       <figure class="hero-film">
         <div class="hero-sequence-viewport">
           <img class="hero-film-poster" src="/media/waika-bosque-hero-poster.jpg" width="960" height="540" alt="" aria-hidden="true" decoding="async">
-          <canvas class="hero-sequence" width="720" height="405" data-frame-sequence data-frame-count="60" role="img" aria-label="Recorrido por un bosque blanco que termina frente a un portátil con el mensaje Aunque nos estén olvidando, somos vitales."></canvas>
+          <canvas class="hero-sequence" width="720" height="405" data-frame-sequence data-frame-count="60" role="img" data-i18n-aria="hero.sequenceAlt" aria-label="Recorrido por un bosque blanco que termina frente a un portátil con el mensaje Aunque nos estén olvidando, somos vitales."></canvas>
         </div>
-        <figcaption><span>WAIKA / GIRO</span><span>Scroll para entrar</span></figcaption>
+        <figcaption><span data-i18n="hero.scroll">Desliza para explorar</span><a class="hero-skip" href="#contenido-principal" data-skip-intro data-i18n="hero.skip">Saltar introducción</a></figcaption>
       </figure>
       <div class="hero-wash" aria-hidden="true"></div>
       <div class="hero-grid">
-        <p class="eyebrow"><span class="live-dot"></span>Estudio digital · España · desde 2016</p>
-        <h1 data-scrub="headline">Que te encuentren. <em>Que te recuerden.</em></h1>
-        <p class="hero-copy">Diseñamos webs, contenido y herramientas con IA para negocios que necesitan una presencia digital con criterio, movimiento y dirección.</p>
+        <p class="eyebrow"><span class="live-dot"></span><span data-i18n="hero.eyebrow">Estudio digital · España · desde 2016</span></p>
+        <h1 data-scrub="headline"><span data-i18n="hero.titleOne">Que te encuentren.</span> <em data-i18n="hero.titleTwo">Que te recuerden.</em></h1>
+        <p class="hero-copy" data-i18n="hero.copy">Diseñamos webs, contenido y herramientas con IA para negocios que necesitan una presencia digital con criterio, movimiento y dirección.</p>
         <div class="hero-actions">
-          <a class="cta-button cta-button-primary" href="/onboarding.html">Empezar proyecto</a>
-          <a class="hero-work-link" href="#portafolio">Ver proyectos</a>
+          <a class="cta-button cta-button-primary" href="/onboarding.html" data-i18n="cta.start">Empezar proyecto</a>
+          <a class="hero-work-link" href="#portafolio" data-i18n="cta.seeWork">Ver proyectos</a>
         </div>
       </div>
       <div class="scroll-ruler" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -80,54 +84,54 @@
 
   <div class="ticker" aria-hidden="true" data-marquee>
     <div class="ticker-track" data-marquee-track data-speed="-34">
-      <div class="ticker-group"><span>ESTRATEGIA</span><i>+</i><span>DISEÑO WEB</span><i>+</i><span>IA APLICADA</span><i>+</i><span>CONTENIDO</span><i>+</i></div>
-      <div class="ticker-group"><span>ESTRATEGIA</span><i>+</i><span>DISEÑO WEB</span><i>+</i><span>IA APLICADA</span><i>+</i><span>CONTENIDO</span><i>+</i></div>
+      <div class="ticker-group"><span data-i18n="marquee.strategy">ESTRATEGIA</span><i>+</i><span data-i18n="marquee.design">DISEÑO WEB</span><i>+</i><span data-i18n="marquee.ai">IA APLICADA</span><i>+</i><span data-i18n="marquee.content">CONTENIDO</span><i>+</i></div>
+      <div class="ticker-group"><span data-i18n="marquee.strategy">ESTRATEGIA</span><i>+</i><span data-i18n="marquee.design">DISEÑO WEB</span><i>+</i><span data-i18n="marquee.ai">IA APLICADA</span><i>+</i><span data-i18n="marquee.content">CONTENIDO</span><i>+</i></div>
     </div>
     <div class="ticker-track ticker-track-reverse" data-marquee-track data-speed="27">
-      <div class="ticker-group"><span>WEBS QUE CONVIERTEN</span><i>·</i><span>MOVIMIENTO CON PROPÓSITO</span><i>·</i><span>SISTEMAS QUE CRECEN</span><i>·</i></div>
-      <div class="ticker-group"><span>WEBS QUE CONVIERTEN</span><i>·</i><span>MOVIMIENTO CON PROPÓSITO</span><i>·</i><span>SISTEMAS QUE CRECEN</span><i>·</i></div>
+      <div class="ticker-group"><span data-i18n="marquee.convert">WEBS QUE CONVIERTEN</span><i>·</i><span data-i18n="marquee.motion">MOVIMIENTO CON PROPÓSITO</span><i>·</i><span data-i18n="marquee.systems">SISTEMAS QUE CRECEN</span><i>·</i></div>
+      <div class="ticker-group"><span data-i18n="marquee.convert">WEBS QUE CONVIERTEN</span><i>·</i><span data-i18n="marquee.motion">MOVIMIENTO CON PROPÓSITO</span><i>·</i><span data-i18n="marquee.systems">SISTEMAS QUE CRECEN</span><i>·</i></div>
     </div>
   </div>
 
-  <section class="manifesto scene" data-scene>
+  <section class="manifesto scene" id="contenido-principal" data-scene>
     <div class="scene-count">01</div>
     <div class="manifesto-copy">
-      <p class="eyebrow">Una mirada completa</p>
-      <h2>Menos ruido. Más intención en cada pantalla.</h2>
-      <p>Waika une desarrollo web, comunicación e inteligencia artificial aplicada. No vendemos piezas sueltas: ordenamos lo que el negocio necesita decir, mostrar y automatizar.</p>
+      <p class="eyebrow" data-i18n="manifesto.eyebrow">Una mirada completa</p>
+      <h2 data-i18n="manifesto.title">Menos ruido. Más intención en cada pantalla.</h2>
+      <p data-i18n="manifesto.copy">Waika une desarrollo web, comunicación e inteligencia artificial aplicada. No vendemos piezas sueltas: ordenamos lo que el negocio necesita decir, mostrar y automatizar.</p>
     </div>
     <aside class="manifesto-card">
-      <span>Directo</span>
-      <strong>Piensas el proyecto con quien lo ejecuta.</strong>
-      <p>Sin capas innecesarias, sin promesas infladas y sin estética genérica de plantilla.</p>
+      <span data-i18n="manifesto.direct">Directo</span>
+      <strong data-i18n="manifesto.cardTitle">Piensas el proyecto con quien lo ejecuta.</strong>
+      <p data-i18n="manifesto.cardCopy">Sin capas innecesarias, sin promesas infladas y sin estética genérica de plantilla.</p>
     </aside>
   </section>
 
   <section class="services scene" id="servicios" data-scene>
     <div class="section-head">
-      <p class="eyebrow">02 / Capacidades</p>
-      <h2>Un sistema digital, no una lista de servicios.</h2>
+      <p class="eyebrow" data-i18n="services.eyebrow">02 / Capacidades</p>
+      <h2 data-i18n="services.title">Un sistema digital, no una lista de servicios.</h2>
     </div>
     <div class="service-list">
       <article class="service" data-stagger>
         <span>01</span>
-        <h3>Webs con dirección</h3>
-        <p>Landings y sitios corporativos con narrativa, velocidad y contenido editable.</p>
+        <h3 data-i18n="service.webTitle">Webs con dirección</h3>
+        <p data-i18n="service.webCopy">Landings y sitios corporativos con narrativa, velocidad y contenido editable.</p>
       </article>
       <article class="service" data-stagger>
         <span>02</span>
-        <h3>Estrategia de IA</h3>
-        <p>Decisiones prácticas para incorporar IA donde reduce trabajo o mejora la venta.</p>
+        <h3 data-i18n="service.aiTitle">Estrategia de IA</h3>
+        <p data-i18n="service.aiCopy">Decisiones prácticas para incorporar IA donde reduce trabajo o mejora la venta.</p>
       </article>
       <article class="service" data-stagger>
         <span>03</span>
-        <h3>Herramientas a medida</h3>
-        <p>Aplicaciones, formularios y automatizaciones que convierten información en acción.</p>
+        <h3 data-i18n="service.toolsTitle">Herramientas a medida</h3>
+        <p data-i18n="service.toolsCopy">Aplicaciones, formularios y automatizaciones que convierten información en acción.</p>
       </article>
       <article class="service" data-stagger>
         <span>04</span>
-        <h3>Contenido y redes</h3>
-        <p>Piezas visuales, video, imagen y publicaciones con una voz reconocible.</p>
+        <h3 data-i18n="service.contentTitle">Contenido y redes</h3>
+        <p data-i18n="service.contentCopy">Piezas visuales, video, imagen y publicaciones con una voz reconocible.</p>
       </article>
     </div>
   </section>
@@ -135,16 +139,16 @@
   <section class="portfolio" id="portafolio" aria-labelledby="portfolio-title">
     <div class="portfolio-heading">
       <div>
-        <p class="eyebrow">Portafolio web</p>
-        <p class="portfolio-count">14 proyectos · 2 colaboraciones</p>
+        <p class="eyebrow" data-i18n="portfolio.eyebrow">Portafolio web</p>
+        <p class="portfolio-count" data-i18n="portfolio.count">14 proyectos · 2 colaboraciones</p>
       </div>
-      <h2 id="portfolio-title">Trabajo real.<br><em>Enlaces reales.</em></h2>
-      <p>Proyectos desarrollados para clientes directos de Waikastudios y como colaborador web de Lymbicorp. Abre cualquier caso para verlo en funcionamiento.</p>
+      <h2 id="portfolio-title"><span data-i18n="portfolio.titleFirst">Trabajo real.</span><br><em data-i18n="portfolio.titleSecond">Enlaces reales.</em></h2>
+      <p data-i18n="portfolio.description">Proyectos desarrollados para clientes directos de Waikastudios y como colaborador web de Lymbicorp. Abre cualquier caso para verlo en funcionamiento.</p>
     </div>
     <div class="portfolio-showcase" aria-labelledby="portfolio-index-title">
       <div class="portfolio-showcase-head">
-        <h3 id="portfolio-index-title">Explora los proyectos.</h3>
-        <p>Arrastra para recorrerlos. La tarjeta central abre la web real.</p>
+        <h3 id="portfolio-index-title" data-i18n="portfolio.explore">Explora los proyectos.</h3>
+        <p data-i18n="portfolio.drag">Arrastra para recorrerlos. La tarjeta central abre la web real.</p>
       </div>
       <div class="coverflow" data-coverflow role="region" aria-roledescription="carrusel" aria-label="Proyectos web de Waika Studios">
         <div class="coverflow-viewport" data-coverflow-viewport tabindex="0">
@@ -231,50 +235,51 @@
       </div>
       <div class="portfolio-cta">
         <div>
-          <h3>¿Quieres que el siguiente sea el tuyo?</h3>
-          <p>Cuéntanos qué necesitas y saldrás del onboarding con un briefing claro para empezar.</p>
+          <h3 data-i18n="portfolio.next">¿Quieres que el siguiente sea el tuyo?</h3>
+          <p data-i18n="portfolio.nextCopy">Cuéntanos qué necesitas y saldrás del onboarding con un briefing claro para empezar.</p>
         </div>
-        <a class="cta-button cta-button-dark" href="/onboarding.html">Empezar proyecto</a>
-      </div>
+      <a class="cta-button cta-button-dark" href="/onboarding.html" data-i18n="cta.start">Empezar proyecto</a>
+    </div>
+    <p class="portfolio-all-link"><a href="/trabajos" data-i18n="portfolio.all">Ver los 14 proyectos web ↗</a></p>
     </div>
   </section>
 
   <section class="horizontal-section" id="trabajos" data-horizontal>
     <div class="horizontal-sticky">
       <div class="horizontal-intro">
-        <p class="eyebrow">04 / Sistema de trabajo</p>
-        <h2>De idea dispersa a presencia lista para salir.</h2>
+        <p class="eyebrow" data-i18n="system.eyebrow">04 / Sistema de trabajo</p>
+        <h2 data-i18n="system.title">De idea dispersa a presencia lista para salir.</h2>
         <div class="rail-meta">
-          <p>Cada proyecto avanza con decisiones visibles: primero entendemos, después damos forma y solo entonces publicamos.</p>
+          <p data-i18n="system.copy">Cada proyecto avanza con decisiones visibles: primero entendemos, después damos forma y solo entonces publicamos.</p>
           <div class="rail-counter"><strong data-rail-current>01</strong><span>/05</span></div>
           <div class="rail-progress" aria-hidden="true"><span data-rail-progress></span></div>
         </div>
       </div>
       <div class="rail" data-rail aria-label="Sistema de trabajo Waika">
         <article class="rail-card ink">
-          <span>Brief</span>
-          <strong>Escuchar</strong>
-          <p>Nombre, objetivo, público, referencias, materiales y lo que no debe perderse.</p>
+          <span data-i18n="system.brief">Brief</span>
+          <strong data-i18n="system.listen">Escuchar</strong>
+          <p data-i18n="system.briefCopy">Nombre, objetivo, público, referencias, materiales y lo que no debe perderse.</p>
         </article>
         <article class="rail-card paper">
-          <span>Dirección</span>
-          <strong>Ordenar</strong>
-          <p>Copy, estructura, tono visual y ritmo de scroll antes de producir recursos.</p>
+          <span data-i18n="system.direction">Dirección</span>
+          <strong data-i18n="system.organize">Ordenar</strong>
+          <p data-i18n="system.directionCopy">Copy, estructura, tono visual y ritmo de scroll antes de producir recursos.</p>
         </article>
         <article class="rail-card acid">
-          <span>Construcción</span>
-          <strong>Probar</strong>
-          <p>HTML real, movimiento medido, estados del formulario y respuesta móvil.</p>
+          <span data-i18n="system.build">Construcción</span>
+          <strong data-i18n="system.test">Probar</strong>
+          <p data-i18n="system.buildCopy">HTML real, movimiento medido, estados del formulario y respuesta móvil.</p>
         </article>
         <article class="rail-card coral">
-          <span>Entrega</span>
-          <strong>Publicar</strong>
-          <p>Revisión, ajustes finales, dominio, analítica y base preparada para crecer.</p>
+          <span data-i18n="system.delivery">Entrega</span>
+          <strong data-i18n="system.publish">Publicar</strong>
+          <p data-i18n="system.deliveryCopy">Revisión, ajustes finales, dominio, analítica y base preparada para crecer.</p>
         </article>
         <article class="rail-card blue">
-          <span>Después</span>
-          <strong>Iterar</strong>
-          <p>Campañas, IA, contenido y nuevas piezas según lo que el negocio aprenda.</p>
+          <span data-i18n="system.after">Después</span>
+          <strong data-i18n="system.iterate">Iterar</strong>
+          <p data-i18n="system.afterCopy">Campañas, IA, contenido y nuevas piezas según lo que el negocio aprenda.</p>
         </article>
       </div>
     </div>
@@ -283,39 +288,41 @@
   <section class="offer scene" id="oferta" data-scene>
     <div class="offer-mark">24-48h</div>
     <div class="offer-copy">
-      <p class="eyebrow">05 / Oferta inicial</p>
-      <h2>Primera versión de landing premium en 24-48 horas laborables.</h2>
-      <p>El plazo empieza cuando pago, onboarding y materiales obligatorios están completos.</p>
-      <a class="cta-button cta-button-primary offer-cta" href="/onboarding.html">Empezar proyecto</a>
+      <p class="eyebrow" data-i18n="offer.eyebrow">05 / Oferta inicial</p>
+      <h2 data-i18n="offer.title">Primera versión de landing premium en 24-48 horas laborables.</h2>
+      <p data-i18n="offer.copy">El plazo empieza cuando pago, onboarding y materiales obligatorios están completos.</p>
+      <a class="cta-button cta-button-primary offer-cta" href="/onboarding.html" data-i18n="cta.start">Empezar proyecto</a>
     </div>
     <aside class="offer-guarantee" aria-label="Garantía de plazo">
-      <span>Compromiso Waika</span>
+      <span data-i18n="offer.commitment">Compromiso Waika</span>
       <strong>50%</strong>
-      <p>Si la primera versión no está lista dentro de 24–48 horas laborables, te devolvemos el 50%.</p>
+      <p data-i18n="offer.refund">Si la primera versión no está lista dentro de 24-48 horas laborables, te devolvemos el 50%.</p>
+      <small class="guarantee-fineprint" data-i18n="offer.guaranteeFine">Si incumplimos ese plazo, devolvemos el 50% del importe cubierto. Consulta las condiciones.</small>
+      <a class="guarantee-cta" href="/onboarding.html" data-i18n="cta.start">Empezar proyecto</a>
     </aside>
   </section>
 
   <section class="method scene" id="metodo" data-scene>
     <div class="section-head">
-      <p class="eyebrow">06 / Método</p>
-      <h2>Un proceso corto, visible y revisable.</h2>
+      <p class="eyebrow" data-i18n="method.eyebrow">06 / Método</p>
+      <h2 data-i18n="method.title">Un proceso corto, visible y revisable.</h2>
     </div>
     <div class="steps">
-      <div><span>01</span><h3>Briefing</h3><p>Reunimos objetivos, materiales y referencias.</p></div>
-      <div><span>02</span><h3>Story</h3><p>Definimos escenas, copy y movimiento antes de gastar saldo visual.</p></div>
-      <div><span>03</span><h3>Build</h3><p>Construimos la web con contenido real y recursos temporales si hace falta.</p></div>
-      <div><span>04</span><h3>Review</h3><p>Revisamos, ajustamos y dejamos el proyecto listo para usar.</p></div>
+      <div><span>01</span><h3 data-es="Briefing" data-en="Briefing">Briefing</h3><p data-i18n="method.brief">Reunimos objetivos, materiales y referencias.</p></div>
+      <div><span>02</span><h3 data-es="Story" data-en="Story">Story</h3><p data-i18n="method.story">Definimos escenas, copy y movimiento antes de gastar saldo visual.</p></div>
+      <div><span>03</span><h3 data-es="Build" data-en="Build">Build</h3><p data-i18n="method.build">Construimos la web con contenido real y recursos temporales si hace falta.</p></div>
+      <div><span>04</span><h3 data-es="Review" data-en="Review">Review</h3><p data-i18n="method.review">Revisamos, ajustamos y dejamos el proyecto listo para usar.</p></div>
     </div>
   </section>
 
   <section class="about scene" data-scene>
     <figure class="about-map">
-      <img src="/waika-global-map.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Mapa del alcance internacional de Waika Studios: proyectos en Canadá, Estados Unidos, Panamá, Venezuela y España.">
+      <img src="/waika-global-map.png" width="1536" height="1024" loading="lazy" decoding="async" data-i18n-alt="about.mapAlt" alt="Mapa del alcance internacional de Waika Studios: proyectos en Canadá, Estados Unidos, Panamá, Venezuela y España.">
     </figure>
     <div>
-      <p class="eyebrow">07 / Waika Studios</p>
-      <h2>Un estudio pequeño para trabajar cerca.</h2>
-      <p>Fundado en 2016 por Raúl, con más de veinte años de experiencia personal en el sector. Base en España, trabajo internacional y una forma directa de construir: pensar, hacer, medir y ajustar.</p>
+      <p class="eyebrow" data-i18n="about.eyebrow">07 / Waika Studios</p>
+      <h2 data-i18n="about.title">Un estudio pequeño para trabajar cerca.</h2>
+      <p data-i18n="about.copy">Fundado en 2016 por Raúl, con más de veinte años de experiencia personal en el sector. Base en España, trabajo internacional y una forma directa de construir: pensar, hacer, medir y ajustar.</p>
     </div>
   </section>
 
@@ -323,10 +330,14 @@
 
 <footer>
   <img src="/waika-logo-horizontal.png" width="373" height="113" loading="lazy" decoding="async" alt="Waika Studios">
-  <p>Diseño digital e inteligencia artificial aplicada.</p>
+  <p data-i18n="footer.brandCopy">Diseño digital e inteligencia artificial aplicada.</p>
   <a href="mailto:waikastudios@gmail.com">waikastudios@gmail.com ↗</a>
-  <span>Privacidad · Términos · © Waika Studios</span>
+  <nav class="footer-links" aria-label="Información y recursos">
+    <a href="/trabajos" data-i18n="nav.work">Proyectos</a><a href="/aplicaciones" data-i18n="nav.apps">Aplicaciones</a><a href="/planes" data-i18n="nav.pricing">Planes</a><a href="/preguntas" data-i18n="nav.faq">Preguntas</a><a href="/privacidad" data-i18n="footer.privacy">Privacidad</a><a href="/terminos" data-i18n="footer.terms">Términos</a><a href="/cookies" data-i18n="footer.cookies">Cookies</a><button type="button" data-cookie-open data-i18n="footer.cookieSettings">Configurar cookies</button>
+  </nav>
+  <span>© Waika Studios</span>
 </footer>
 <script src="/app.js"></script>
+<script src="/site-ui.js"></script>
 </body>
 </html>

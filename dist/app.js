@@ -110,9 +110,8 @@ function initCoverflow() {
       const distance = Math.abs(offset);
       const ramp = Math.pow(distance, .66);
       const tilt = Math.min(42 * ramp, 76) * Math.sign(offset);
-      const edge = Math.max(0, Math.min(1, 3.25 - distance));
       card.style.transform = `translateX(calc(-50% + ${offset * pitch}px)) translateZ(${-state.width * .34 * ramp}px) rotateY(${-tilt}deg)`;
-      card.style.opacity = String(Math.max(0, 1 - distance * .16) * edge);
+      card.style.opacity = String(distance < 2.5 ? 1 : Math.max(0, 1 - (distance - 2.5) / .75));
       card.style.zIndex = String(100 - Math.round(distance * 10));
       card.style.pointerEvents = distance < 2.5 ? "auto" : "none";
     });
@@ -184,13 +183,12 @@ function initCoverflow() {
   };
   viewport.addEventListener("pointerup", endDrag);
   viewport.addEventListener("pointercancel", endDrag);
-  viewport.addEventListener("keydown", (event) => {
+viewport.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") { event.preventDefault(); nudge(-1); }
     if (event.key === "ArrowRight") { event.preventDefault(); nudge(1); }
   });
   cards.forEach((card, index) => card.addEventListener("click", (event) => {
     if (state.suppressClick) { event.preventDefault(); return; }
-    if (index !== state.selected) { event.preventDefault(); goTo(index); }
   }));
   carousel.querySelector("[data-coverflow-prev]")?.addEventListener("click", () => nudge(-1));
   carousel.querySelector("[data-coverflow-next]")?.addEventListener("click", () => nudge(1));
@@ -216,7 +214,11 @@ function initMarquee() {
     if (item.speed > 0 && item.offset === 0) item.offset = -item.width;
   });
   measure();
-  new ResizeObserver(measure).observe(document.querySelector("[data-marquee]"));
+  const marquee = document.querySelector("[data-marquee]");
+  const observer = new ResizeObserver(measure);
+  states.forEach(({ track }) => observer.observe(track));
+  if (marquee) observer.observe(marquee);
+  document.fonts?.ready.then(measure);
 
   const animate = (time) => {
     const delta = Math.min((time - previousTime) / 1000, .05);
@@ -247,16 +249,48 @@ initCoverflow();
 initMarquee();
 initHeroSequence();
 
-function updateHorizontalRail() {
-  if (!horizontal || !rail || prefersReducedMotion || window.innerWidth <= 860) return;
+document.querySelectorAll("[data-skip-intro]").forEach((link) => link.addEventListener("click", (event) => {
+  const destination = document.querySelector(link.getAttribute("href"));
+  if (!destination) return;
+  event.preventDefault();
+  history.pushState(null, "", link.getAttribute("href"));
+  window.scrollTo({ top: destination.getBoundingClientRect().top + window.scrollY, behavior: "auto" });
+  closeMobileNav();
+  onScroll();
+}));
 
+function updateHorizontalRail() {
+  if (!horizontal || !rail) return;
+  if (prefersReducedMotion || window.innerWidth <= 1180 || window.innerHeight <= 920) {
+    horizontal.style.height = "auto";
+    rail.style.transform = "none";
+    updateNativeRailProgress();
+    return;
+  }
+
+  horizontal.style.removeProperty("height");
   const rect = horizontal.getBoundingClientRect();
   const travel = horizontal.offsetHeight - window.innerHeight;
   const progress = clamp(-rect.top / travel, 0, 1);
-  const maxShift = rail.scrollWidth - window.innerWidth + (window.innerWidth * 0.08);
+  const sticky = horizontal.querySelector(".horizontal-sticky");
+  const stickyStyle = sticky ? getComputedStyle(sticky) : null;
+  const sidePadding = stickyStyle
+    ? parseFloat(stickyStyle.paddingLeft) + parseFloat(stickyStyle.paddingRight)
+    : 0;
+  const visibleWidth = window.innerWidth - sidePadding;
+  const maxShift = Math.max(0, rail.scrollWidth - visibleWidth);
   rail.style.transform = `translate3d(${-maxShift * progress}px, 0, 0)`;
   if (railProgress) railProgress.style.transform = `scaleX(${progress})`;
   if (railCurrent) railCurrent.textContent = String(Math.min(5, Math.floor(progress * 5) + 1)).padStart(2, "0");
+}
+
+function updateNativeRailProgress() {
+  if (!rail || !railCurrent || !railProgress) return;
+  const maxScroll = Math.max(rail.scrollWidth - rail.clientWidth, 0);
+  const fraction = maxScroll ? clamp(rail.scrollLeft / maxScroll, 0, 1) : 0;
+  const current = Math.min(5, Math.round(fraction * 4) + 1);
+  railCurrent.textContent = String(current).padStart(2, "0");
+  railProgress.style.transform = `scaleX(${current / 5})`;
 }
 
 function updateHeroScrub() {
@@ -313,36 +347,5 @@ function onScroll() {
 
 window.addEventListener("scroll", onScroll, { passive: true });
 window.addEventListener("resize", () => { updateHorizontalRail(); updateHeroScrub(); });
+rail?.addEventListener("scroll", updateNativeRailProgress, { passive: true });
 onScroll();
-
-form?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = Object.fromEntries(new FormData(form).entries());
-  const missing = ["name", "project", "brief", "email"].filter((field) => !String(data[field] || "").trim());
-
-  if (missing.length) {
-    status.textContent = "Faltan campos obligatorios para guardar el briefing.";
-    status.className = "form-status error";
-    return;
-  }
-
-  const subject = encodeURIComponent(`Nuevo proyecto: ${data.project}`);
-  const body = encodeURIComponent([
-    `Nombre: ${data.name}`,
-    `Email: ${data.email}`,
-    `Proyecto: ${data.project}`,
-    "",
-    "Qué necesita construir:",
-    data.brief,
-    "",
-    "Referencias:",
-    data.referenceUrls || "No indicadas",
-    "",
-    "Qué le gusta de las referencias:",
-    data.referenceNotes || "No indicado"
-  ].join("\n"));
-
-  status.textContent = "Tu solicitud está preparada. Se abrirá tu correo para enviarla.";
-  status.className = "form-status ok";
-  window.location.href = `mailto:waikastudios@gmail.com?subject=${subject}&body=${body}`;
-});

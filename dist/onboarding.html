@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="description" content="Briefing inicial para construir tu proyecto digital con Waika Studios.">
 <meta name="robots" content="noindex,follow,noarchive">
@@ -20,95 +20,107 @@
 <a class="skip-link" href="#briefing">Saltar al formulario</a>
 <header class="site-header is-scrolled onboarding-header">
   <a class="brand" href="/" aria-label="Volver a Waika Studios"><img src="/waika-logo-horizontal.png" width="373" height="113" alt="Waika Studios"></a>
-  <a class="header-quiet-link" href="/">Volver a la web</a>
+  <a class="header-quiet-link" href="/" data-es="Volver a la web" data-en="Back to the website">Volver a la web</a>
 </header>
 <main id="briefing" class="briefing-shell">
   <div class="briefing-intro">
-    <p class="eyebrow">Briefing inicial · 6–8 min</p>
-    <h1>Vamos a darle<br><em>dirección.</em></h1>
-    <p>Unas preguntas bien elegidas para entender tu negocio, ordenar la idea y llegar a una primera propuesta con criterio.</p>
-    <div class="briefing-aside"><span>Waika Studios</span><span>Sin compromiso · Puedes volver atrás</span></div>
+    <p class="eyebrow" data-es="Briefing inicial · 6-8 min" data-en="Project briefing · 6-8 min">Briefing inicial · 6-8 min</p>
+    <h1><span data-es="Vamos a darle" data-en="Let's give it">Vamos a darle</span><br><em data-es="dirección." data-en="direction.">dirección.</em></h1>
+    <p data-es="Unas preguntas bien elegidas para entender tu negocio, ordenar la idea y llegar a una primera propuesta con criterio." data-en="A few thoughtful questions to understand your business, shape the idea and prepare a considered proposal.">Unas preguntas bien elegidas para entender tu negocio, ordenar la idea y llegar a una primera propuesta con criterio.</p>
+    <div class="briefing-aside"><span>Waika Studios</span><span data-es="Sin compromiso · Puedes volver atrás" data-en="No commitment · You can go back">Sin compromiso · Puedes volver atrás</span></div>
   </div>
-  <form id="briefing-form" class="briefing-form" novalidate data-recipient="waikastudios@gmail.com">
+  <form id="briefing-form" class="briefing-form" novalidate>
     <div class="form-trap" aria-hidden="true">
       <label for="company-website">Deja este campo vacío</label>
       <input id="company-website" name="website" type="text" tabindex="-1" autocomplete="off">
     </div>
+    <section class="briefing-quote" id="briefing-quote" aria-live="polite" hidden>
+      <p class="briefing-quote-kicker" id="briefing-quote-kicker"></p>
+      <div class="briefing-quote-details">
+        <strong id="briefing-quote-pages"></strong>
+        <span id="briefing-quote-features"></span>
+      </div>
+      <output class="briefing-quote-total" id="briefing-quote-total"></output>
+      <p class="briefing-quote-caption" id="briefing-quote-caption"></p>
+    </section>
     <div class="briefing-progress" aria-label="Progreso del briefing">
       <div class="briefing-progress-top"><span id="step-label">Paso 1 de 7</span><span id="progress-percent">14%</span></div>
       <div class="briefing-progress-track"><span id="progress-bar"></span></div>
     </div>
 
     <fieldset class="briefing-step is-active" data-step="1">
-      <legend tabindex="-1">Primero, pongamos nombre al proyecto.</legend>
-      <p class="step-help">Así podremos leer tus respuestas con el contexto adecuado.</p>
-      <label>Tu nombre<input name="name" autocomplete="name" maxlength="120" placeholder="Nombre y apellidos" required></label>
-      <label>Nombre del negocio o proyecto<input name="project" autocomplete="organization" maxlength="180" placeholder="¿Cómo se llama?" required></label>
+      <legend tabindex="-1" data-es="Primero, pongamos nombre al proyecto." data-en="First, let's name the project.">Primero, pongamos nombre al proyecto.</legend>
+      <p class="step-help" data-es="Así podremos leer tus respuestas con el contexto adecuado." data-en="This gives us the context to understand your answers.">Así podremos leer tus respuestas con el contexto adecuado.</p>
+      <label><span data-es="Tu nombre" data-en="Your name">Tu nombre</span><input name="name" autocomplete="name" maxlength="120" placeholder="Nombre y apellidos" data-i18n-placeholder="onboarding.namePlaceholder" required></label>
+      <label><span data-es="Nombre del negocio o proyecto" data-en="Business or project name">Nombre del negocio o proyecto</span><input name="project" autocomplete="organization" maxlength="180" placeholder="¿Cómo se llama?" data-i18n-placeholder="onboarding.projectPlaceholder" required></label>
     </fieldset>
 
     <fieldset class="briefing-step" data-step="2">
-      <legend tabindex="-1">¿Qué haces y para quién?</legend>
-      <p class="step-help">No hace falta que suene perfecto. Queremos entenderlo como lo explicarías a un cliente.</p>
-      <label>Describe tu negocio<textarea name="business" rows="5" maxlength="3000" placeholder="Qué vendes, qué haces y qué te hace diferente..." required></textarea></label>
-      <label>¿A quién quieres atraer?<textarea name="audience" rows="4" maxlength="2000" placeholder="Tipo de cliente, sector, ubicación, nivel de conocimiento..." required></textarea></label>
+      <legend tabindex="-1" data-es="¿Qué haces y para quién?" data-en="What do you do, and for whom?">¿Qué haces y para quién?</legend>
+      <p class="step-help" data-es="No hace falta que suene perfecto. Queremos entenderlo como lo explicarías a un cliente." data-en="It doesn't need to sound polished. Explain it as you would to a customer.">No hace falta que suene perfecto. Queremos entenderlo como lo explicarías a un cliente.</p>
+      <label><span data-es="Describe tu negocio" data-en="Describe your business">Describe tu negocio</span><textarea name="business" rows="5" maxlength="3000" placeholder="Qué vendes, qué haces y qué te hace diferente..." data-i18n-placeholder="onboarding.businessPlaceholder" required></textarea></label>
+      <label><span data-es="¿A quién quieres atraer?" data-en="Who do you want to reach?">¿A quién quieres atraer?</span><textarea name="audience" rows="4" maxlength="2000" placeholder="Tipo de cliente, sector, ubicación, nivel de conocimiento..." data-i18n-placeholder="onboarding.audiencePlaceholder" required></textarea></label>
     </fieldset>
 
     <fieldset class="briefing-step" data-step="3">
-      <legend tabindex="-1">¿Qué debería conseguir la web?</legend>
-      <p class="step-help">Elige el resultado más importante ahora. Luego podrás añadir contexto.</p>
+      <legend tabindex="-1" data-es="¿Qué debería conseguir la web?" data-en="What should the website achieve?">¿Qué debería conseguir la web?</legend>
+      <p class="step-help" data-es="Elige el resultado más importante ahora. Luego podrás añadir contexto." data-en="Choose the most important outcome. You can add context below.">Elige el resultado más importante ahora. Luego podrás añadir contexto.</p>
       <div class="choice-grid">
-        <label class="choice"><input type="radio" name="goal" value="vender" required><span>Vender o captar solicitudes</span></label>
-        <label class="choice"><input type="radio" name="goal" value="presentar"><span>Presentar el negocio</span></label>
-        <label class="choice"><input type="radio" name="goal" value="reservar"><span>Conseguir reservas o citas</span></label>
-        <label class="choice"><input type="radio" name="goal" value="automatizar"><span>Ordenar o automatizar algo</span></label>
+        <label class="choice"><input type="radio" name="goal" value="vender" required><span data-es="Vender o captar solicitudes" data-en="Sell or attract enquiries">Vender o captar solicitudes</span></label>
+        <label class="choice"><input type="radio" name="goal" value="presentar"><span data-es="Presentar el negocio" data-en="Present the business">Presentar el negocio</span></label>
+        <label class="choice"><input type="radio" name="goal" value="reservar"><span data-es="Conseguir reservas o citas" data-en="Get bookings or appointments">Conseguir reservas o citas</span></label>
+        <label class="choice"><input type="radio" name="goal" value="automatizar"><span data-es="Ordenar o automatizar algo" data-en="Organize or automate a process">Ordenar o automatizar algo</span></label>
       </div>
-      <label>¿Qué tendría que pasar para decir “ha funcionado”?<textarea name="success" rows="3" maxlength="2000" placeholder="Más llamadas, más confianza, más ventas, ahorrar tiempo..." required></textarea></label>
+      <label><span data-es="¿Qué tendría que pasar para decir “ha funcionado”?" data-en="What would make you say “this worked”?">¿Qué tendría que pasar para decir “ha funcionado”?</span><textarea name="success" rows="3" maxlength="2000" placeholder="Más llamadas, más confianza, más ventas, ahorrar tiempo..." data-i18n-placeholder="onboarding.successPlaceholder" required></textarea></label>
     </fieldset>
 
     <fieldset class="briefing-step" data-step="4">
-      <legend tabindex="-1">¿Qué necesitas construir?</legend>
-      <p class="step-help">Marca todo lo que aplique. Esto nos ayuda a medir el alcance desde el principio.</p>
+      <legend tabindex="-1" data-es="¿Qué necesitas construir?" data-en="What do you need to build?">¿Qué necesitas construir?</legend>
+      <p class="step-help" data-es="Marca todo lo que aplique. Esto nos ayuda a medir el alcance desde el principio." data-en="Select everything that applies. This helps us scope the work early.">Marca todo lo que aplique. Esto nos ayuda a medir el alcance desde el principio.</p>
       <div class="choice-grid choice-grid-wide">
-        <label class="choice"><input type="checkbox" name="needs" value="landing"><span>Landing de campaña</span></label>
-        <label class="choice"><input type="checkbox" name="needs" value="corporativa"><span>Web corporativa</span></label>
-        <label class="choice"><input type="checkbox" name="needs" value="portfolio"><span>Portfolio o catálogo</span></label>
-        <label class="choice"><input type="checkbox" name="needs" value="herramienta"><span>Herramienta o formulario</span></label>
-        <label class="choice"><input type="checkbox" name="needs" value="contenido"><span>Contenido y redes</span></label>
-        <label class="choice"><input type="checkbox" name="needs" value="ia"><span>IA o automatización</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="landing"><span data-es="Landing de campaña" data-en="Campaign landing page">Landing de campaña</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="corporativa"><span data-es="Web corporativa" data-en="Business website">Web corporativa</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="portfolio"><span data-es="Portfolio o catálogo" data-en="Portfolio or catalog">Portfolio o catálogo</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="herramienta"><span data-es="Herramienta o formulario" data-en="Tool or form">Herramienta o formulario</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="contenido"><span data-es="Contenido y redes" data-en="Content and social media">Contenido y redes</span></label>
+        <label class="choice"><input type="checkbox" name="needs" value="ia"><span data-es="IA o automatización" data-en="AI or automation">IA o automatización</span></label>
       </div>
-      <label>¿Hay algo imprescindible que deba estar?<textarea name="mustHave" rows="3" maxlength="2000" placeholder="Una sección, integración, idioma, función o limitación..." required></textarea></label>
+      <label><span data-es="¿Hay algo imprescindible que deba estar?" data-en="Is there anything that must be included?">¿Hay algo imprescindible que deba estar?</span><textarea name="mustHave" rows="3" maxlength="2000" placeholder="Una sección, integración, idioma, función o limitación..." data-i18n-placeholder="onboarding.mustPlaceholder" required></textarea></label>
     </fieldset>
 
     <fieldset class="briefing-step" data-step="5">
-      <legend tabindex="-1">¿Qué debe contar la página?</legend>
-      <p class="step-help">Piensa en las dudas que una persona necesita resolver antes de contactarte.</p>
-      <label>¿Qué páginas o secciones imaginas?<textarea name="sections" rows="4" maxlength="2000" placeholder="Inicio, servicios, quiénes somos, casos, contacto..." required></textarea></label>
-      <label>¿Qué materiales ya tienes?<textarea name="materials" rows="4" maxlength="2000" placeholder="Logo, fotos, textos, vídeos, testimonios, catálogo, redes..." required></textarea></label>
+      <legend tabindex="-1" data-es="¿Qué debe contar la página?" data-en="What should the website communicate?">¿Qué debe contar la página?</legend>
+      <p class="step-help" data-es="Piensa en las dudas que una persona necesita resolver antes de contactarte." data-en="Think about the questions someone needs answered before reaching out.">Piensa en las dudas que una persona necesita resolver antes de contactarte.</p>
+      <label><span data-es="¿Qué páginas o secciones imaginas?" data-en="Which pages or sections do you have in mind?">¿Qué páginas o secciones imaginas?</span><textarea name="sections" rows="4" maxlength="2000" placeholder="Inicio, servicios, quiénes somos, casos, contacto..." data-i18n-placeholder="onboarding.sectionsPlaceholder" required></textarea></label>
+      <label><span data-es="¿Qué materiales ya tienes?" data-en="What materials do you already have?">¿Qué materiales ya tienes?</span><textarea name="materials" rows="4" maxlength="2000" placeholder="Logo, fotos, textos, vídeos, testimonios, catálogo, redes..." data-i18n-placeholder="onboarding.materialsPlaceholder" required></textarea></label>
     </fieldset>
 
     <fieldset class="briefing-step" data-step="6">
-      <legend tabindex="-1">Enséñanos el universo visual.</legend>
-      <p class="step-help">Las referencias pueden ser webs, perfiles, marcas o cualquier cosa que explique el tono.</p>
-      <label>Webs o referencias que te gustan<textarea name="referenceUrls" rows="4" maxlength="2000" placeholder="Pega una o varias URLs, una por línea..."></textarea></label>
-      <label>¿Qué te gusta de ellas y qué quieres evitar?<textarea name="referenceNotes" rows="4" maxlength="2000" placeholder="Color, ritmo, tipografía, movimiento, fotografía, tono..."></textarea></label>
+      <legend tabindex="-1" data-es="Enséñanos el universo visual." data-en="Show us the visual direction.">Enséñanos el universo visual.</legend>
+      <p class="step-help" data-es="Las referencias pueden ser webs, perfiles, marcas o cualquier cosa que explique el tono." data-en="References can be websites, profiles, brands or anything that conveys the tone.">Las referencias pueden ser webs, perfiles, marcas o cualquier cosa que explique el tono.</p>
+      <label><span data-es="Webs o referencias que te gustan" data-en="Websites or references you like">Webs o referencias que te gustan</span><textarea name="referenceUrls" rows="4" maxlength="2000" placeholder="Pega una o varias URLs, una por línea..." data-i18n-placeholder="onboarding.referencesPlaceholder"></textarea></label>
+      <label><span data-es="¿Qué te gusta de ellas y qué quieres evitar?" data-en="What do you like about them, and what should we avoid?">¿Qué te gusta de ellas y qué quieres evitar?</span><textarea name="referenceNotes" rows="4" maxlength="2000" placeholder="Color, ritmo, tipografía, movimiento, fotografía, tono..." data-i18n-placeholder="onboarding.notesPlaceholder"></textarea></label>
     </fieldset>
 
     <fieldset class="briefing-step" data-step="7">
-      <legend tabindex="-1">Último paso: cómo seguimos.</legend>
-      <p class="step-help">Revisaremos tus respuestas y te escribiremos a este correo con el siguiente paso.</p>
-      <label>Email de contacto<input name="email" type="email" autocomplete="email" maxlength="254" placeholder="tu@email.com" required></label>
-      <label>¿Hay una fecha o contexto importante?<textarea name="timing" rows="3" maxlength="1000" placeholder="Lanzamiento, campaña, evento, urgencia o ninguna fecha concreta..."></textarea></label>
-      <label class="consent"><input type="checkbox" name="consent" required><span>Acepto que Waika Studios use estos datos para responder a mi solicitud.</span></label>
+      <legend tabindex="-1" data-es="Último paso: cómo seguimos." data-en="Last step: how we follow up.">Último paso: cómo seguimos.</legend>
+      <p class="step-help" data-es="Revisaremos tus respuestas y nos pondremos en contacto para aclarar el alcance y los siguientes pasos." data-en="We'll review your answers and get in touch to clarify the scope and next steps.">Revisaremos tus respuestas y nos pondremos en contacto para aclarar el alcance y los siguientes pasos.</p>
+      <label><span data-es="Email de contacto" data-en="Contact email">Email de contacto</span><input name="email" type="email" autocomplete="email" maxlength="254" placeholder="tu@email.com" required></label>
+      <label><span data-es="¿Hay una fecha o contexto importante?" data-en="Is there an important date or context?">¿Hay una fecha o contexto importante?</span><textarea name="timing" rows="3" maxlength="1000" placeholder="Lanzamiento, campaña, evento, urgencia o ninguna fecha concreta..." data-i18n-placeholder="onboarding.timingPlaceholder"></textarea></label>
+      <label class="consent"><input type="checkbox" name="consent" required><span><span data-es="He leído el" data-en="I have read the">He leído el</span> <a href="/privacidad" target="_blank" rel="noopener" data-es="aviso de privacidad" data-en="privacy notice">aviso de privacidad</a><span data-es="y entiendo cómo se usarán mis datos para responder a esta solicitud." data-en="and understand how my details will be used to respond to this request.">y entiendo cómo se usarán mis datos para responder a esta solicitud.</span></span></label>
     </fieldset>
 
     <div class="briefing-actions">
-      <button type="button" class="button-secondary" id="back-button">Atrás</button>
-      <button type="button" class="button-primary" id="next-button">Continuar <span>↗</span></button>
+      <button type="button" class="button-secondary" id="back-button" data-i18n="onboarding.back" hidden>Atrás</button>
+      <button type="button" class="button-primary" id="next-button"><span data-i18n="onboarding.continue">Continuar</span> <span>↗</span></button>
     </div>
     <p id="briefing-status" class="form-status" role="status" aria-live="polite"></p>
-    <p class="briefing-save">Tus respuestas se guardan en este dispositivo mientras completas el briefing.</p>
+    <p class="briefing-save" data-i18n="onboarding.saved">Tus respuestas se guardan en este dispositivo durante 48 horas. Puedes borrarlas cuando quieras.</p>
+    <button type="button" class="clear-draft" id="clear-draft" data-i18n="onboarding.clear">Borrar respuestas guardadas</button>
   </form>
 </main>
-<script src="/onboarding.js"></script>
+<footer class="onboarding-footer"><a href="/privacidad" data-i18n="footer.privacy">Privacidad</a><a href="/terminos" data-i18n="footer.terms">Términos</a><a href="/cookies" data-i18n="footer.cookies">Cookies</a><button type="button" data-cookie-open data-i18n="footer.cookieSettings">Configurar cookies</button></footer>
+<script src="/app.js"></script><script src="/site-ui.js"></script>
+<script src="/onboarding.js?v=3"></script>
 </body>
 </html>
