@@ -1,5 +1,4 @@
-import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { extname, join, normalize, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer } from "node:http";
@@ -27,7 +26,7 @@ function assetPath(urlPath) {
   const pathname = decodeURIComponent(urlPath.split("?")[0]);
   const relative = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
   const candidate = normalize(join(publicRoot, relative));
-  if (candidate !== publicRoot && !candidate.startsWith(`${publicRoot}${sep}`)) return null;
+  if (candidate !== publicRoot && !candidate.startsWith(publicRoot + sep)) return null;
   return candidate;
 }
 
@@ -35,14 +34,13 @@ async function assetResponse(request) {
   const path = assetPath(new URL(request.url).pathname);
   if (!path) return new Response("Not found", { status: 404 });
   try {
-    const info = await stat(path);
-    if (!info.isFile()) return new Response("Not found", { status: 404 });
+    const body = await readFile(path);
     const headers = {
       "Content-Type": contentTypes[extname(path).toLowerCase()] || "application/octet-stream",
-      "Content-Length": String(info.size)
+      "Content-Length": String(body.byteLength)
     };
     if (request.method === "HEAD") return new Response(null, { status: 200, headers });
-    return new Response(createReadStream(path), { status: 200, headers });
+    return new Response(body, { status: 200, headers });
   } catch {
     return new Response("Not found", { status: 404 });
   }
@@ -62,8 +60,8 @@ function envForHostinger() {
 
 function nodeRequest(request) {
   const protocol = request.headers["x-forwarded-proto"] || "http";
-  const host = request.headers.host || `localhost:${port}`;
-  const url = `${protocol}://${host}${request.url}`;
+  const host = request.headers.host || "localhost:" + port;
+  const url = protocol + "://" + host + request.url;
   const headers = new Headers();
   for (const [key, value] of Object.entries(request.headers)) {
     if (Array.isArray(value)) headers.set(key, value.join(", "));
@@ -93,5 +91,5 @@ const server = createServer(async (request, reply) => {
 });
 
 server.listen(port, "0.0.0.0", () => {
-  console.log(`Waika Studios listening on port ${port}`);
+  console.log("Waika Studios listening on port " + port);
 });
