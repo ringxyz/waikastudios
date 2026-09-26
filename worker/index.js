@@ -126,7 +126,7 @@ function publicOrigin(env, request) {
   if (configured) return configured;
   try {
     const url = new URL(request.url);
-    if (url.protocol === "https:" && PRODUCTION_HOSTS.has(url.hostname.toLowerCase())) return PRODUCTION_ORIGIN;
+    if (PRODUCTION_HOSTS.has(url.hostname.toLowerCase())) return PRODUCTION_ORIGIN;
   } catch {}
   return DEFAULT_ORIGIN;
 }

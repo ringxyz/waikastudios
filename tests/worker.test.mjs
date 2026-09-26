@@ -84,6 +84,12 @@ try {
   assert.equal(implicitCanonical.status, 200);
   assert.match(await implicitCanonical.text(), new RegExp(implicitProductionOrigin.replaceAll(".", "\\.")));
   assert.equal(implicitCanonical.headers.get("X-Robots-Tag"), null);
+  const httpProductionPost = await worker.fetch(new Request("http://waikastudios.com/api/briefing?source=test", {
+    method: "POST", headers: { Origin: "http://waikastudios.com", "Content-Type": "application/json" }, body: "{}"
+  }), implicitProductionEnv);
+  assert.equal(httpProductionPost.status, 308);
+  assert.equal(httpProductionPost.headers.get("Location"), `${implicitProductionOrigin}/api/briefing?source=test`);
+  assert.doesNotMatch(httpProductionPost.headers.get("Location") || "", /waikastudios\.waikastudios\.chatgpt\.site/i);
   const implicitChallenge = await worker.fetch(new Request(`${implicitProductionOrigin}/api/form-challenge`, {
     headers: { Origin: implicitProductionOrigin, "X-Waika-Client-IP": "198.51.100.10" }
   }), implicitProductionEnv);
