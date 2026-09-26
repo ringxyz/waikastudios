@@ -46,8 +46,10 @@ try {
     ASSETS: { fetch: async (request) => {
       const path = new URL(request.url).pathname;
       if (path === "/planes.html") return new Response(`<link rel="canonical" href="${origin}/planes"><meta property="og:url" content="${origin}/planes">`, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+      if (path === "/onboarding.html") return new Response(`<meta name="robots" content="noindex"><link rel="canonical" href="${origin}/onboarding.html">`, { headers: { "Content-Type": "text/html; charset=utf-8" } });
       if (path === "/sitemap.xml") return new Response(`<loc>${origin}/</loc>`, { headers: { "Content-Type": "application/xml" } });
       if (path === "/robots.txt") return new Response(`Sitemap: ${origin}/sitemap.xml`, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+      if (path === "/.well-known/security.txt") return new Response(`Contact: mailto:test@example.com\nCanonical: ${origin}/.well-known/security.txt`, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
       if (path === "/404.html") return new Response("Waika branded not found", { headers: { "Content-Type": "text/html; charset=utf-8" } });
       return new Response("Not found", { status: 404 });
     } }
@@ -63,9 +65,41 @@ try {
   assert.equal((await worker.fetch(new Request(`${productionOrigin}/planes`), productionEnv)).headers.get("X-Robots-Tag"), null);
   assert.match(await (await worker.fetch(new Request(`${productionOrigin}/sitemap.xml`), productionEnv)).text(), new RegExp(productionOrigin.replaceAll(".", "\\.")));
   assert.match(await (await worker.fetch(new Request(`${productionOrigin}/robots.txt`), productionEnv)).text(), new RegExp(productionOrigin.replaceAll(".", "\\.")));
+  const securityTxt = await worker.fetch(new Request(`${productionOrigin}/.well-known/security.txt`), productionEnv);
+  assert.equal(securityTxt.status, 200);
+  assert.match(await securityTxt.text(), new RegExp(`${productionOrigin.replaceAll(".", "\\.")}/\\.well-known/security\\.txt`));
+  const onboardingAlias = await worker.fetch(new Request(`${productionOrigin}/onboarding`), productionEnv);
+  assert.equal(onboardingAlias.status, 200);
+  assert.match(onboardingAlias.headers.get("X-Robots-Tag") || "", /noindex/);
   const alias = await worker.fetch(new Request("https://www.waika.example/planes?from=old"), productionEnv);
   assert.equal(alias.status, 308);
   assert.equal(alias.headers.get("Location"), `${productionOrigin}/planes?from=old`);
+  const implicitProductionOrigin = "https://waikastudios.com";
+  const implicitProductionEnv = { ...env, ASSETS: { fetch: async (request) => {
+    const path = new URL(request.url).pathname;
+    if (path === "/planes.html") return new Response(`<link rel="canonical" href="${origin}/planes">`, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+    return new Response("asset");
+  } } };
+  const implicitCanonical = await worker.fetch(new Request(`${implicitProductionOrigin}/planes`), implicitProductionEnv);
+  assert.equal(implicitCanonical.status, 200);
+  assert.match(await implicitCanonical.text(), new RegExp(implicitProductionOrigin.replaceAll(".", "\\.")));
+  assert.equal(implicitCanonical.headers.get("X-Robots-Tag"), null);
+  const implicitChallenge = await worker.fetch(new Request(`${implicitProductionOrigin}/api/form-challenge`, {
+    headers: { Origin: implicitProductionOrigin, "X-Waika-Client-IP": "198.51.100.10" }
+  }), implicitProductionEnv);
+  assert.equal(implicitChallenge.status, 200);
+  const deniedPageMethod = await worker.fetch(new Request(`${origin}/`, {
+    method: "POST", headers: { "Accept-Language": "en" }, body: "{}"
+  }), env);
+  assert.equal(deniedPageMethod.status, 405);
+  assert.equal(deniedPageMethod.headers.get("Allow"), "GET, HEAD");
+  assert.equal(await deniedPageMethod.text(), "Method not allowed.");
+  const localizedChatFallback = await worker.fetch(new Request(`${origin}/api/chat`, {
+    method: "POST", headers: requestHeaders("198.51.100.70", { "Content-Type": "application/json", "Accept-Language": "en" }),
+    body: JSON.stringify({ messages: [{ role: "user", content: "Hello" }] })
+  }), env);
+  assert.equal(localizedChatFallback.status, 503);
+  assert.match((await localizedChatFallback.json()).message, /still being configured/i);
   const branded404 = await worker.fetch(new Request(`${productionOrigin}/missing-page`, { headers: { Accept: "text/html" } }), productionEnv);
   assert.equal(branded404.status, 404);
   assert.match(await branded404.text(), /Waika branded not found/);

@@ -26,12 +26,12 @@
   }
 
   function locale() {
-    return document.documentElement.lang === "en" ? "en-GB" : "es-ES";
+    return document.documentElement.lang === "en" ? "en-US" : "es-US";
   }
 
   function money(value) {
     return new Intl.NumberFormat(locale(), {
-      style: "currency", currency: "EUR", maximumFractionDigits: 0
+      style: "currency", currency: "USD", maximumFractionDigits: 0
     }).format(value);
   }
 

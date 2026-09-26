@@ -183,10 +183,15 @@ function initCoverflow() {
   };
   viewport.addEventListener("pointerup", endDrag);
   viewport.addEventListener("pointercancel", endDrag);
-viewport.addEventListener("keydown", (event) => {
+  viewport.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") { event.preventDefault(); nudge(-1); }
     if (event.key === "ArrowRight") { event.preventDefault(); nudge(1); }
   });
+  viewport.addEventListener("wheel", (event) => {
+    if (Math.abs(event.deltaY) < 1 && Math.abs(event.deltaX) < 1) return;
+    const distance = (event.deltaX || event.deltaY) / Math.max(state.width * .7, 1);
+    settle(state.target + distance * .9);
+  }, { passive: true });
   cards.forEach((card, index) => card.addEventListener("click", (event) => {
     if (state.suppressClick) { event.preventDefault(); return; }
   }));
@@ -204,6 +209,21 @@ viewport.addEventListener("keydown", (event) => {
 function initMarquee() {
   const tracks = [...document.querySelectorAll("[data-marquee-track]")];
   if (tracks.length === 0 || prefersReducedMotion) return;
+  const marquee = document.querySelector("[data-marquee]");
+  const motionToggle = marquee?.querySelector("[data-marquee-toggle]");
+  let paused = false;
+  motionToggle?.addEventListener("click", () => {
+    paused = !paused;
+    const locale = document.documentElement.lang === "en" ? "en" : "es";
+    const key = paused ? "marquee.resume" : "marquee.pause";
+    motionToggle.setAttribute("aria-pressed", String(paused));
+    motionToggle.dataset.i18nAria = key;
+    motionToggle.querySelector(".sr-only").textContent = locale === "en"
+      ? (paused ? "Resume motion" : "Pause motion")
+      : (paused ? "Reanudar movimiento" : "Pausar movimiento");
+    motionToggle.setAttribute("aria-label", motionToggle.querySelector(".sr-only").textContent);
+    marquee.classList.toggle("is-motion-paused", paused);
+  });
   const states = tracks.map((track) => ({ track, offset: 0, width: 0, speed: Number(track.dataset.speed) || -30, direction: 1 }));
   let previousTime = performance.now();
   let previousScroll = window.scrollY;
@@ -214,7 +234,6 @@ function initMarquee() {
     if (item.speed > 0 && item.offset === 0) item.offset = -item.width;
   });
   measure();
-  const marquee = document.querySelector("[data-marquee]");
   const observer = new ResizeObserver(measure);
   states.forEach(({ track }) => observer.observe(track));
   if (marquee) observer.observe(marquee);
@@ -234,7 +253,7 @@ function initMarquee() {
     const factor = 1 + Math.min(Math.abs(scrollVelocity) / 850, 2.5);
 
     states.forEach((item) => {
-      if (!item.width) return;
+      if (!item.width || paused) return;
       item.offset += item.speed * item.direction * factor * delta;
       while (item.offset <= -item.width) item.offset += item.width;
       while (item.offset > 0) item.offset -= item.width;

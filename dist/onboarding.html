@@ -17,9 +17,9 @@
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="onboarding-page">
-<a class="skip-link" href="#briefing">Saltar al formulario</a>
+<a class="skip-link" href="#briefing" data-i18n="onboarding.skip">Saltar al formulario</a>
 <header class="site-header is-scrolled onboarding-header">
-  <a class="brand" href="/" aria-label="Volver a Waika Studios"><img src="/waika-logo-horizontal.png" width="373" height="113" alt="Waika Studios"></a>
+  <a class="brand" href="/" data-i18n-aria="onboarding.backHome" aria-label="Volver a Waika Studios"><img src="/waika-logo-horizontal.png" width="373" height="113" alt="Waika Studios"></a>
   <a class="header-quiet-link" href="/" data-es="Volver a la web" data-en="Back to the website">Volver a la web</a>
 </header>
 <main id="briefing" class="briefing-shell">
@@ -31,7 +31,7 @@
   </div>
   <form id="briefing-form" class="briefing-form" novalidate>
     <div class="form-trap" aria-hidden="true">
-      <label for="company-website">Deja este campo vacío</label>
+      <label for="company-website" data-i18n="onboarding.honeypot">Deja este campo vacío</label>
       <input id="company-website" name="website" type="text" tabindex="-1" autocomplete="off">
     </div>
     <section class="briefing-quote" id="briefing-quote" aria-live="polite" hidden>
@@ -105,7 +105,7 @@
     <fieldset class="briefing-step" data-step="7">
       <legend tabindex="-1" data-es="Último paso: cómo seguimos." data-en="Last step: how we follow up.">Último paso: cómo seguimos.</legend>
       <p class="step-help" data-es="Revisaremos tus respuestas y nos pondremos en contacto para aclarar el alcance y los siguientes pasos." data-en="We'll review your answers and get in touch to clarify the scope and next steps.">Revisaremos tus respuestas y nos pondremos en contacto para aclarar el alcance y los siguientes pasos.</p>
-      <label><span data-es="Email de contacto" data-en="Contact email">Email de contacto</span><input name="email" type="email" autocomplete="email" maxlength="254" placeholder="tu@email.com" required></label>
+      <label><span data-es="Email de contacto" data-en="Contact email">Email de contacto</span><input name="email" type="email" autocomplete="email" maxlength="254" placeholder="tu@email.com" data-i18n-placeholder="onboarding.emailPlaceholder" required></label>
       <label><span data-es="¿Hay una fecha o contexto importante?" data-en="Is there an important date or context?">¿Hay una fecha o contexto importante?</span><textarea name="timing" rows="3" maxlength="1000" placeholder="Lanzamiento, campaña, evento, urgencia o ninguna fecha concreta..." data-i18n-placeholder="onboarding.timingPlaceholder"></textarea></label>
       <label class="consent"><input type="checkbox" name="consent" required><span><span data-es="He leído el" data-en="I have read the">He leído el</span> <a href="/privacidad" target="_blank" rel="noopener" data-es="aviso de privacidad" data-en="privacy notice">aviso de privacidad</a><span data-es="y entiendo cómo se usarán mis datos para responder a esta solicitud." data-en="and understand how my details will be used to respond to this request.">y entiendo cómo se usarán mis datos para responder a esta solicitud.</span></span></label>
     </fieldset>

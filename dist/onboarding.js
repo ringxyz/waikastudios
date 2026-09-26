@@ -62,8 +62,8 @@ function renderQuoteSelection() {
   quoteFeaturesLabel.textContent = `${t("quote.briefExtras", "Funciones", "Features")}: ${addons.length
     ? addons.map((key) => t(quoteAddonNames[key], key, key)).join(", ")
     : t("quote.briefNoExtras", "Sin extras seleccionados", "No extras selected")}`;
-  quoteTotalLabel.textContent = new Intl.NumberFormat(en ? "en-GB" : "es-ES", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0
+  quoteTotalLabel.textContent = new Intl.NumberFormat(en ? "en-US" : "es-US", {
+    style: "currency", currency: "USD", maximumFractionDigits: 0
   }).format(estimate);
   quoteCaption.textContent = t(
     "quote.briefCaption",
@@ -81,7 +81,7 @@ async function getFormChallenge() {
   if (formChallenge && Date.now() < formChallenge.expiresAt - 60_000) return formChallenge;
   const response = await fetch(challengeEndpoint, {
     method: "GET",
-    headers: { Accept: "application/json" },
+    headers: { Accept: "application/json", "Accept-Language": document.documentElement.lang === "en" ? "en" : "es" },
     credentials: "same-origin",
     cache: "no-store"
   });
@@ -164,8 +164,8 @@ function importQuoteSelection() {
     renderQuoteSelection();
     const { pages, addons } = quoteSelection;
     const estimate = 250 + ((pages - 1) * 75) + addons.reduce((sum, key) => sum + quotePrices[key], 0);
-    const money = new Intl.NumberFormat(document.documentElement.lang === "en" ? "en-GB" : "es-ES", {
-      style: "currency", currency: "EUR", maximumFractionDigits: 0
+    const money = new Intl.NumberFormat(document.documentElement.lang === "en" ? "en-US" : "es-US", {
+      style: "currency", currency: "USD", maximumFractionDigits: 0
     }).format(estimate);
     const summary = [
       t("quote.briefTitle", "Estimación seleccionada en el presupuestador:", "Estimate selected in the quote builder:"),
@@ -202,6 +202,7 @@ function showStep(index, focusHeading = true) {
   steps.forEach((step, stepIndex) => step.classList.toggle("is-active", stepIndex === index));
   const percent = Math.round(((index + 1) / steps.length) * 100);
   const en = document.documentElement.lang === "en";
+  progress.setAttribute("aria-label", t("onboarding.progress", "Progreso del briefing", "Briefing progress"));
   stepLabel.textContent = `${t("onboarding.step", "Paso", "Step")} ${index + 1} ${en ? "of" : "de"} ${steps.length}`;
   progressPercent.textContent = `${percent}%`;
   progressBar.style.width = `${percent}%`;
@@ -285,7 +286,7 @@ async function submitBriefing() {
   try {
     const response = await fetch(deliveryEndpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: { "Content-Type": "application/json", Accept: "application/json", "Accept-Language": document.documentElement.lang === "en" ? "en" : "es" },
       body: JSON.stringify(payload)
     });
     const result = await response.json();
