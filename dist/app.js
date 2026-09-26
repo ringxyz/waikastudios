@@ -6,7 +6,9 @@ const railCurrent = document.querySelector("[data-rail-current]");
 const railProgress = document.querySelector("[data-rail-progress]");
 const form = document.querySelector("#project-form");
 const status = document.querySelector("#form-status");
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+let prefersReducedMotion = motionPreference.matches;
+motionPreference.addEventListener("change", (event) => { prefersReducedMotion = event.matches; });
 const menuToggle = document.querySelector(".menu-toggle");
 const mobileNav = document.querySelector("#mobile-nav");
 const hero = document.querySelector(".hero");
@@ -208,7 +210,7 @@ function initCoverflow() {
 
 function initMarquee() {
   const tracks = [...document.querySelectorAll("[data-marquee-track]")];
-  if (tracks.length === 0 || prefersReducedMotion) return;
+  if (tracks.length === 0) return;
   const marquee = document.querySelector("[data-marquee]");
   const motionToggle = marquee?.querySelector("[data-marquee-toggle]");
   let paused = false;
@@ -223,11 +225,18 @@ function initMarquee() {
       : (paused ? "Reanudar movimiento" : "Pausar movimiento");
     motionToggle.setAttribute("aria-label", motionToggle.querySelector(".sr-only").textContent);
     marquee.classList.toggle("is-motion-paused", paused);
+    if (paused && animationFrame !== 0) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+    } else if (!paused) {
+      start();
+    }
   });
   const states = tracks.map((track) => ({ track, offset: 0, width: 0, speed: Number(track.dataset.speed) || -30, direction: 1 }));
   let previousTime = performance.now();
   let previousScroll = window.scrollY;
   let scrollVelocity = 0;
+  let animationFrame = 0;
 
   const measure = () => states.forEach((item) => {
     item.width = item.track.firstElementChild?.getBoundingClientRect().width || 0;
@@ -240,6 +249,8 @@ function initMarquee() {
   document.fonts?.ready.then(measure);
 
   const animate = (time) => {
+    animationFrame = 0;
+    if (prefersReducedMotion) return;
     const delta = Math.min((time - previousTime) / 1000, .05);
     const scrollDelta = window.scrollY - previousScroll;
     if (Math.abs(scrollDelta) > .1) {
@@ -259,9 +270,23 @@ function initMarquee() {
       while (item.offset > 0) item.offset -= item.width;
       item.track.style.transform = `translate3d(${item.offset}px, 0, 0)`;
     });
-    requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
   };
-  requestAnimationFrame(animate);
+  const start = () => {
+    if (!prefersReducedMotion && !paused && animationFrame === 0) {
+      previousTime = performance.now();
+      animationFrame = requestAnimationFrame(animate);
+    }
+  };
+  motionPreference.addEventListener("change", (event) => {
+    if (event.matches && animationFrame !== 0) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+    } else if (!event.matches) {
+      start();
+    }
+  });
+  start();
 }
 
 initCoverflow();
