@@ -348,11 +348,11 @@ function updateHeroScrub() {
   const frameIndex = Math.round(progress * Math.max(heroFrameCount - 1, 0));
   if (frameIndex !== requestedHeroFrame) drawHeroFrame(frameIndex);
   if (headline) headline.style.transform = `translate3d(0, ${progress * -34}px, 0)`;
-  const copyOpacity = clamp(1 - progress / .34, 0, 1);
+  const copyOpacity = clamp(1 - progress / .46, 0, 1);
   hero.style.setProperty("--hero-copy-opacity", copyOpacity.toFixed(3));
-  hero.style.setProperty("--hero-cue-opacity", String(progress < .08 ? 1 : 0));
+  hero.style.setProperty("--hero-cue-opacity", String(progress < .18 ? 1 : 0));
   if (heroGrid) {
-    const hidden = progress > .38;
+    const hidden = progress > .48;
     heroGrid.style.visibility = hidden ? "hidden" : "visible";
     heroGrid.setAttribute("aria-hidden", String(hidden));
   }

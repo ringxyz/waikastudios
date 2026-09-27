@@ -14,7 +14,7 @@ const waikaCopy = {
   "cta.start": { es: "Empezar proyecto", en: "Start a project" },
   "cta.seeWork": { es: "Ver proyectos", en: "See our work" },
   "hero.scroll": { es: "Desliza para explorar", en: "Scroll to explore" },
-  "hero.skip": { es: "Saltar introducción", en: "Skip intro" },
+  "hero.skip": { es: "Continuar sin intro", en: "Continue without intro" },
   "hero.sequenceAlt": { es: "Recorrido por un bosque blanco que termina frente a un portátil con el mensaje Aunque nos estén olvidando, somos vitales.", en: "A journey through a pale forest ending at a laptop displaying: Though they may forget us, we are vital." },
   "hero.titleOne": { es: "Que te encuentren.", en: "Be found." },
   "hero.titleTwo": { es: "Que te recuerden.", en: "Be remembered." },
@@ -90,9 +90,6 @@ const waikaCopy = {
   "footer.brandCopy": { es: "Diseño digital e inteligencia artificial aplicada.", en: "Digital design and applied artificial intelligence." },
   "footer.paymentMethods": { es: "Métodos de pago", en: "Payment methods" },
   "tools.eyebrow": { es: "Herramientas que usamos", en: "Tools we use" },
-  "tools.title": { es: "Ideas, diseño y desarrollo en un mismo flujo.", en: "Ideas, design and development in one workflow." },
-  "tools.pause": { es: "Pausar logos", en: "Pause logos" },
-  "tools.resume": { es: "Reanudar logos", en: "Resume logos" },
   "portfolio.all": { es: "Ver los 14 proyectos web ↗", en: "See all 14 websites ↗" },
   "pricing.title": { es: "Tu web, a tu medida.", en: "Your website, your way." },
   "pricing.intro": { es: "Elige cuántas páginas necesitas y añade las funciones que te ayudarían. Verás cómo cambia una estimación inicial, sin compromiso.", en: "Choose the number of pages and features you need. See an initial estimate adjust as you go, with no obligation." },
@@ -246,6 +243,10 @@ const waikaCopy = {
   "dock.language": { es: "Cambiar idioma", en: "Change language" },
   "dock.chat": { es: "Abrir el asistente", en: "Open assistant" },
   "dock.more": { es: "Accesos rápidos", en: "Quick actions" },
+  "dock.chatShort": { es: "Chat", en: "Chat" },
+  "dock.languageShort": { es: "EN", en: "ES" },
+  "dock.topShort": { es: "Arriba", en: "Top" },
+  "dock.chatPrompt": { es: "Hola, estoy aquí para ayudarte", en: "Hi, I’m here to help" },
   "chat.title": { es: "Asistente Waika", en: "Waika assistant" },
   "chat.close": { es: "Cerrar asistente", en: "Close assistant" },
   "chat.intro": { es: "Puedo orientarte sobre servicios, precios y cómo empezar. Si tu proyecto es específico, prepara el briefing.", en: "I can help with services, pricing and how to get started. For a project-specific proposal, start the briefing." },
@@ -312,11 +313,11 @@ function addSharedControls() {
   shared.dataset.siteUi = "true";
   shared.innerHTML = `
     <div class="site-dock" role="group" aria-label="Accesos rápidos">
-      <button type="button" class="site-dock-toggle" data-dock-toggle aria-expanded="false" aria-controls="site-dock-actions" aria-label="Accesos rápidos" title="Accesos rápidos"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>
+      <span class="site-dock-nudge" data-i18n="dock.chatPrompt">Hola, estoy aquí para ayudarte</span>
       <div class="site-dock-actions" id="site-dock-actions">
-        <button type="button" data-chat-open aria-expanded="false" aria-controls="waika-chat" aria-label="Abrir el asistente" title="Abrir el asistente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.8 7.5 8.4 8.4 0 0 1-3.7-.9L4 19l1-4a7.3 7.3 0 0 1-.9-3.5A7.6 7.6 0 0 1 12 4a7.6 7.6 0 0 1 8 7.5Z"/><path d="M8.5 11.5h7M8.5 14.5h4"/></svg></button>
-        <button type="button" data-language aria-label="Cambiar idioma" title="Cambiar idioma">EN</button>
-        <button type="button" data-back-top aria-label="Volver arriba" title="Volver arriba"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7M12 7v13"/></svg></button>
+        <button type="button" data-chat-open aria-expanded="false" aria-controls="waika-chat" aria-label="Abrir el asistente" title="Abrir el asistente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.8 7.5 8.4 8.4 0 0 1-3.7-.9L4 19l1-4a7.3 7.3 0 0 1-.9-3.5A7.6 7.6 0 0 1 12 4a7.6 7.6 0 0 1 8 7.5Z"/><path d="M8.5 11.5h7M8.5 14.5h4"/></svg><span class="site-dock-button-label" data-i18n="dock.chatShort">Chat</span></button>
+        <button type="button" data-language aria-label="Cambiar idioma" title="Cambiar idioma"><span class="site-dock-button-label" data-i18n="dock.languageShort">EN</span></button>
+        <button type="button" data-back-top aria-label="Volver arriba" title="Volver arriba"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7M12 7v13"/></svg><span class="site-dock-button-label" data-i18n="dock.topShort">Arriba</span></button>
       </div>
     </div>
     <section class="chat-panel" id="waika-chat" aria-labelledby="chat-title" aria-modal="false" hidden>
@@ -592,7 +593,9 @@ function applyLocale(locale) {
   });
   const languageButton = document.querySelector("[data-language]");
   if (languageButton) {
-    languageButton.textContent = next === "es" ? "EN" : "ES";
+    const languageLabel = languageButton.querySelector(".site-dock-button-label");
+    if (languageLabel) languageLabel.textContent = next === "es" ? "EN" : "ES";
+    else languageButton.textContent = next === "es" ? "EN" : "ES";
     languageButton.setAttribute("aria-label", waikaText("dock.language", next));
   }
   const dock = document.querySelector(".site-dock");
@@ -635,8 +638,8 @@ function applyLocale(locale) {
 function initBrandStrips() {
   const locale = () => document.documentElement.lang === "en" ? "en" : "es";
   const paymentMarks = [
-    ["PayPal", "PP", "paypal"], ["USDT", "₮", "usdt"], ["Zelle", "Z", "zelle"],
-    ["Mony", "M", "mony"], ["Zinli", "Z", "zinli"]
+    ["PayPal", "paypal", "#003087"], ["USDT", "tether", "#26a17b"], ["Zelle", "zelle", "#6d1ed4"],
+    ["Mony", "mony", "#ffffff"], ["Zinli", "zinli", "#a9e35b"]
   ];
   document.querySelectorAll("footer").forEach((footer) => {
     if (footer.querySelector(".footer-payments")) return;
@@ -648,16 +651,27 @@ function initBrandStrips() {
     label.textContent = waikaText("footer.paymentMethods", locale());
     const list = document.createElement("ul");
     list.className = "payment-marks";
-    paymentMarks.forEach(([name, symbol, brand]) => {
+    paymentMarks.forEach(([name, brand, color]) => {
       const item = document.createElement("li");
       item.className = `payment-mark payment-mark--${brand}`;
-      const badge = document.createElement("span");
-      badge.className = "payment-mark-symbol";
-      badge.setAttribute("aria-hidden", "true");
-      badge.textContent = symbol;
+      const logo = document.createElement("img");
+      logo.className = "payment-mark-logo";
+      logo.src = `/assets/logos/${brand}.svg`;
+      logo.alt = "";
+      logo.width = 112;
+      logo.height = 32;
+      logo.loading = "lazy";
+      logo.decoding = "async";
+      logo.style.setProperty("--payment-brand", color);
+      logo.setAttribute("aria-hidden", "true");
       const wordmark = document.createElement("span");
+      wordmark.className = "payment-mark-name";
       wordmark.textContent = name;
-      item.append(badge, wordmark);
+      logo.addEventListener("error", () => {
+        logo.remove();
+        item.classList.add("is-logo-fallback");
+      }, { once: true });
+      item.append(logo, wordmark);
       list.append(item);
     });
     section.append(label, list);
@@ -679,61 +693,48 @@ function initBrandStrips() {
     footer.querySelector(":scope > span:last-child")?.before(link);
   });
 
-  const footer = document.querySelector("body > footer");
-  if (!footer || !document.querySelector(".hero-film")) return;
+  const portfolio = document.querySelector(".portfolio");
+  if (!portfolio || !document.querySelector(".hero-film")) return;
   const section = document.createElement("section");
-  section.className = "tools-showcase";
-  section.setAttribute("aria-labelledby", "tools-showcase-title");
-  const heading = document.createElement("div");
-  heading.className = "tools-showcase-heading";
-  const eyebrow = document.createElement("p");
-  eyebrow.className = "eyebrow";
-  eyebrow.dataset.brandStripLabel = "tools.eyebrow";
-  eyebrow.textContent = waikaText("tools.eyebrow", locale());
-  const title = document.createElement("h2");
-  title.id = "tools-showcase-title";
-  title.dataset.brandStripLabel = "tools.title";
-  title.textContent = waikaText("tools.title", locale());
-  const motionToggle = document.createElement("button");
-  motionToggle.className = "tools-motion-toggle";
-  motionToggle.type = "button";
-  motionToggle.dataset.toolsToggle = "";
-  motionToggle.dataset.i18n = "tools.pause";
-  motionToggle.dataset.i18nAria = "tools.pause";
-  motionToggle.setAttribute("aria-pressed", "false");
-  motionToggle.textContent = waikaText("tools.pause", locale());
-  heading.append(eyebrow, title, motionToggle);
+  section.className = "portfolio-tools-strip";
+  section.setAttribute("aria-label", waikaText("tools.eyebrow", locale()));
   const viewport = document.createElement("div");
   viewport.className = "tools-marquee";
   viewport.setAttribute("role", "region");
   viewport.setAttribute("aria-label", waikaText("tools.eyebrow", locale()));
   const track = document.createElement("div");
   track.className = "tools-marquee-track";
-  const names = ["WordPress", "Elementor", "Codex", "Bricks", "Figma", "Photoshop", "Illustrator", "Supabase", "GitHub"];
+  const names = [
+     ["WordPress", "wordpress"], ["Elementor", "elementor"], ["Codex", "openai"],
+     ["Bricks", "bricks"], ["Figma", "figma"], ["Photoshop", "adobe-photoshop"],
+     ["Illustrator", "adobe-illustrator"], ["Supabase", "supabase"], ["GitHub", "github"]
+  ];
   [false, true].forEach((duplicate) => {
     const group = document.createElement("ul");
     group.className = "tools-marquee-group";
     if (duplicate) group.setAttribute("aria-hidden", "true");
-    names.forEach((name) => {
+     names.forEach(([name, slug]) => {
       const item = document.createElement("li");
-      item.className = `tool-wordmark tool-wordmark--${name.toLowerCase()}`;
-      item.textContent = name;
+      item.className = `tool-logo-item tool-logo-item--${name.toLowerCase()}`;
+      const logo = document.createElement("img");
+       logo.src = `/assets/logos/${slug}.svg`;
+       logo.width = 32;
+       logo.height = 32;
+      logo.loading = "lazy";
+      logo.decoding = "async";
+      logo.alt = "";
+       logo.setAttribute("aria-hidden", "true");
+       logo.addEventListener("error", () => logo.remove(), { once: true });
+      const label = document.createElement("span");
+      label.textContent = name;
+      item.append(logo, label);
       group.append(item);
     });
     track.append(group);
   });
-  viewport.append(track);
-  motionToggle.addEventListener("click", () => {
-    const paused = viewport.classList.toggle("is-motion-paused");
-    const key = paused ? "tools.resume" : "tools.pause";
-    motionToggle.dataset.i18n = key;
-    motionToggle.dataset.i18nAria = key;
-    motionToggle.setAttribute("aria-pressed", String(paused));
-    motionToggle.textContent = waikaText(key, locale());
-    motionToggle.setAttribute("aria-label", waikaText(key, locale()));
-  });
-  section.append(heading, viewport);
-  footer.before(section);
+   viewport.append(track);
+   section.append(viewport);
+   portfolio.querySelector(".portfolio-showcase")?.before(section);
 }
 
 function initTestimonialMarquee() {
