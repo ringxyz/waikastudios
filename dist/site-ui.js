@@ -990,15 +990,13 @@ function initDock() {
       const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / travel));
       dock.classList.toggle("is-intro-visible", progress < .08);
     }
+    if (dock && footer) {
+      const footerRect = footer.getBoundingClientRect();
+      dock.classList.toggle("is-footer-visible", footerRect.top < window.innerHeight && footerRect.bottom > 0);
+    }
   };
   window.addEventListener("scroll", update, { passive: true });
   update();
-  if (dock && footer && "IntersectionObserver" in window) {
-    const footerObserver = new IntersectionObserver(([entry]) => {
-      dock.classList.toggle("is-footer-visible", entry.isIntersecting);
-    }, { threshold: 0.05 });
-    footerObserver.observe(footer);
-  }
   document.querySelector("[data-back-top]")?.addEventListener("click", () => {
     close();
     window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
