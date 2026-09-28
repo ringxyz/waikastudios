@@ -62,7 +62,7 @@ function renderQuoteSelection() {
   quoteFeaturesLabel.textContent = `${t("quote.briefExtras", "Funciones", "Features")}: ${addons.length
     ? addons.map((key) => t(quoteAddonNames[key], key, key)).join(", ")
     : t("quote.briefNoExtras", "Sin extras seleccionados", "No extras selected")}`;
-  quoteTotalLabel.textContent = new Intl.NumberFormat(en ? "en-US" : "es-US", {
+  quoteTotalLabel.textContent = window.waikaMoney?.(estimate) || new Intl.NumberFormat(en ? "en-US" : "es-US", {
     style: "currency", currency: "USD", maximumFractionDigits: 0
   }).format(estimate);
   quoteCaption.textContent = t(
@@ -164,7 +164,7 @@ function importQuoteSelection() {
     renderQuoteSelection();
     const { pages, addons } = quoteSelection;
     const estimate = 250 + ((pages - 1) * 75) + addons.reduce((sum, key) => sum + quotePrices[key], 0);
-    const money = new Intl.NumberFormat(document.documentElement.lang === "en" ? "en-US" : "es-US", {
+    const money = window.waikaMoney?.(estimate) || new Intl.NumberFormat(document.documentElement.lang === "en" ? "en-US" : "es-US", {
       style: "currency", currency: "USD", maximumFractionDigits: 0
     }).format(estimate);
     const summary = [
@@ -325,6 +325,10 @@ clearDraftButton?.addEventListener("click", () => {
 document.addEventListener("waika:locale-change", () => {
   renderQuoteSelection();
   showStep(currentStep, false);
+});
+document.addEventListener("waika:currency-change", () => {
+  renderQuoteSelection();
+  importQuoteSelection();
 });
 restoreDraft();
 importQuoteSelection();

@@ -30,7 +30,7 @@
   }
 
   function money(value) {
-    return new Intl.NumberFormat(locale(), {
+    return window.waikaMoney?.(value) || new Intl.NumberFormat(locale(), {
       style: "currency", currency: "USD", maximumFractionDigits: 0
     }).format(value);
   }
@@ -85,5 +85,6 @@
   pageSlider.addEventListener("input", update);
   addons.forEach((input) => input.addEventListener("change", update));
   document.addEventListener("waika:locale-change", update);
+  document.addEventListener("waika:currency-change", update);
   update();
 })();

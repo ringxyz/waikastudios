@@ -247,6 +247,8 @@ const waikaCopy = {
   "dock.languageShort": { es: "EN", en: "ES" },
   "dock.topShort": { es: "Arriba", en: "Top" },
   "dock.chatPrompt": { es: "Hola, estoy aquí para ayudarte", en: "Hi, I’m here to help" },
+  "dock.currency": { es: "Cambiar divisa", en: "Change currency" },
+  "dock.currencyShort": { es: "USD", en: "USD" },
   "chat.title": { es: "Asistente Waika", en: "Waika assistant" },
   "chat.close": { es: "Cerrar asistente", en: "Close assistant" },
   "chat.intro": { es: "Puedo orientarte sobre servicios, precios y cómo empezar. Si tu proyecto es específico, prepara el briefing.", en: "I can help with services, pricing and how to get started. For a project-specific proposal, start the briefing." },
@@ -303,8 +305,63 @@ const waikaCopy = {
   ,"onboarding.timingPlaceholder": { es: "Lanzamiento, campaña, evento, urgencia o ninguna fecha concreta...", en: "Launch, campaign, event, urgency or no specific date…" }
 };
 
+let waikaCurrency = "USD";
+
+function currencyLocale() {
+  return document.documentElement.lang === "en" ? "en-US" : "es-ES";
+}
+
+function formatWaikaMoney(value) {
+  return new Intl.NumberFormat(currencyLocale(), {
+    style: "currency", currency: waikaCurrency, maximumFractionDigits: 0
+  }).format(value);
+}
+
+function formatCurrencyCopy(value) {
+  return value.replace(/\$(250|350|180|140|100|90|75|55|45)\b/g, (_, amount) => formatWaikaMoney(Number(amount)))
+    .replace(/\bUSD\b/g, waikaCurrency);
+}
+
 function waikaText(key, locale = document.documentElement.lang) {
-  return waikaCopy[key]?.[locale === "en" ? "en" : "es"] || key;
+  const value = waikaCopy[key]?.[locale === "en" ? "en" : "es"] || key;
+  return formatCurrencyCopy(value);
+}
+
+window.waikaMoney = formatWaikaMoney;
+window.waikaCurrency = () => waikaCurrency;
+
+function inferCurrency() {
+  const language = String(navigator.language || "").toLowerCase();
+  const region = language.split("-")[1]?.toUpperCase();
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+  const euroRegions = new Set(["AT", "BE", "CY", "DE", "EE", "ES", "FI", "FR", "GR", "HR", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PT", "SI", "SK"]);
+  return euroRegions.has(region) || /^(Europe\/(Madrid|Paris|Berlin|Rome|Lisbon|Amsterdam|Brussels|Vienna|Dublin|Helsinki|Athens|Zagreb|Ljubljana|Bratislava|Tallinn|Riga|Vilnius|Luxembourg))/.test(timezone) ? "EUR" : "USD";
+}
+
+function setCurrency(next, { persist = true } = {}) {
+  waikaCurrency = next === "EUR" ? "EUR" : "USD";
+  if (persist) {
+    try { localStorage.setItem("waika-currency", waikaCurrency); } catch {}
+  }
+  document.documentElement.dataset.currency = waikaCurrency.toLowerCase();
+  const button = document.querySelector("[data-currency]");
+  if (button) {
+    button.setAttribute("aria-label", waikaText("dock.currency"));
+    button.title = waikaText("dock.currency");
+    button.querySelector(".site-dock-button-label")?.replaceChildren(document.createTextNode(waikaCurrency));
+  }
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const key = element.dataset.i18n;
+    if (waikaCopy[key]) element.textContent = waikaText(key);
+  });
+  document.dispatchEvent(new CustomEvent("waika:currency-change", { detail: waikaCurrency }));
+}
+
+function initCurrency() {
+  let saved = null;
+  try { saved = localStorage.getItem("waika-currency"); } catch {}
+  setCurrency(saved === "EUR" || saved === "USD" ? saved : inferCurrency(), { persist: false });
+  document.querySelector("[data-currency]")?.addEventListener("click", () => setCurrency(waikaCurrency === "USD" ? "EUR" : "USD"));
 }
 
 function addSharedControls() {
@@ -317,6 +374,7 @@ function addSharedControls() {
       <div class="site-dock-actions" id="site-dock-actions">
         <button type="button" data-chat-open aria-expanded="false" aria-controls="waika-chat" aria-label="Abrir el asistente" title="Abrir el asistente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.8 7.5 8.4 8.4 0 0 1-3.7-.9L4 19l1-4a7.3 7.3 0 0 1-.9-3.5A7.6 7.6 0 0 1 12 4a7.6 7.6 0 0 1 8 7.5Z"/><path d="M8.5 11.5h7M8.5 14.5h4"/></svg><span class="site-dock-button-label" data-i18n="dock.chatShort">Chat</span></button>
         <button type="button" data-language aria-label="Cambiar idioma" title="Cambiar idioma"><span class="site-dock-button-label" data-i18n="dock.languageShort">EN</span></button>
+        <button type="button" data-currency aria-label="Cambiar divisa" title="Cambiar divisa"><span class="site-dock-button-label" data-i18n="dock.currencyShort">USD</span></button>
         <button type="button" data-back-top aria-label="Volver arriba" title="Volver arriba"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7M12 7v13"/></svg><span class="site-dock-button-label" data-i18n="dock.topShort">Arriba</span></button>
       </div>
     </div>
@@ -939,6 +997,7 @@ function initDock() {
     window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   });
   document.querySelector("[data-language]")?.addEventListener("click", close);
+  document.querySelector("[data-currency]")?.addEventListener("click", close);
   document.querySelector("[data-chat-open]")?.addEventListener("click", close);
   document.addEventListener("pointerdown", (event) => {
     if (dock?.classList.contains("is-open") && !dock.contains(event.target)) close();
@@ -953,6 +1012,7 @@ function initDock() {
 
 addSharedControls();
 initLanguage();
+initCurrency();
 initBrandStrips();
 initTestimonialMarquee();
 initCookies();
