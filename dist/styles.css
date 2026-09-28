@@ -658,7 +658,8 @@ p { line-height: 1.55; }
 .site-dock-button-label { font: 700 10px var(--mono); letter-spacing: .04em; line-height: 1; text-transform: uppercase; }
 .site-dock-nudge { position: absolute; right: 0; bottom: calc(100% + .55rem); width: min(240px, calc(100vw - 2rem)); padding: .7rem .8rem; border: 1px solid var(--acid); border-radius: var(--radius-control); background: var(--paper); color: var(--ink); font-size: .82rem; line-height: 1.35; box-shadow: 0 12px 32px rgba(16,17,15,.2); }
 .site-dock-nudge::after { content: ""; position: absolute; right: 1.15rem; bottom: -.45rem; width: .8rem; height: .8rem; border-right: 1px solid var(--acid); border-bottom: 1px solid var(--acid); background: var(--paper); transform: rotate(45deg); }
-body.cookie-banner-visible .site-dock { display: none; }
+body.cookie-banner-visible .site-dock,
+.site-dock.is-intro-visible { display: none; }
 .site-dock svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .site-dock-toggle { display: none !important; }
 .site-dock [data-back-top] { display: none; }
