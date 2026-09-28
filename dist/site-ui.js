@@ -973,6 +973,7 @@ function initChat() {
 function initDock() {
   const dock = document.querySelector(".site-dock");
   const hero = document.querySelector(".hero");
+  const footer = document.querySelector("footer");
   const toggle = dock?.querySelector("[data-dock-toggle]");
   const close = () => {
     dock?.classList.remove("is-open");
@@ -992,6 +993,12 @@ function initDock() {
   };
   window.addEventListener("scroll", update, { passive: true });
   update();
+  if (dock && footer && "IntersectionObserver" in window) {
+    const footerObserver = new IntersectionObserver(([entry]) => {
+      dock.classList.toggle("is-footer-visible", entry.isIntersecting);
+    }, { threshold: 0.05 });
+    footerObserver.observe(footer);
+  }
   document.querySelector("[data-back-top]")?.addEventListener("click", () => {
     close();
     window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
